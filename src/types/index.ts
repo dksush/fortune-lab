@@ -34,3 +34,22 @@ export interface PaymentConfirmRequest {
   hanjaIds: string[]
   readingRaw: string
 }
+
+export interface NameReadingCharacter {
+  char: string    // 한자 (e.g. "敏")
+  sound: string   // 음독 (e.g. "민")
+  meaning: string // 훈 (e.g. "민첩할")
+  element: string // 오행 (木火土金水)
+}
+
+export interface NameReadingResult {
+  characters: NameReadingCharacter[]
+  name_meaning: string       // 이름 한자의 종합적 의미
+  saju_elements: {
+    year?: { stem: string; branch: string; stemKr: string; branchKr: string }
+    month?: { stem: string; branch: string; stemKr: string; branchKr: string }
+    day?: { stem: string; branch: string; stemKr: string; branchKr: string }
+  } | null
+  combined_reading: string   // 이름 + 사주 연계 해석
+  fortune_summary: string    // 운세 요약
+}
