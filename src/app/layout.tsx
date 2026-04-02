@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className="bg-[#0d0720] text-white min-h-screen antialiased">
+      <body className="bg-[#F5EDD8] text-[#2C1A0E] min-h-screen antialiased">
         {children}
         <KakaoInit />
       </body>

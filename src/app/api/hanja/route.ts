@@ -30,13 +30,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(data)
   }
 
-  // 음독으로 검색
+  // 음독으로 검색 — usage_count 내림차순, 빈 meaning 제외
   const { data, error } = await supabase
     .from('hanja')
     .select('id, character, reading, meaning, stroke')
     .eq('reading', reading)
+    .neq('meaning', '')
+    .order('usage_count', { ascending: false })
     .order('stroke', { ascending: true })
-    .limit(10)
+    .limit(12)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)

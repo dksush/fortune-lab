@@ -7,7 +7,7 @@ const AMOUNT = 990
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { paymentKey, orderId, amount, inputName, hanjaIds, readingRaw } = body
+  const { paymentKey, orderId, amount, inputName, hanjaIds, readingRaw, extraHanja = [], allSelectedHanja = [] } = body
 
   if (amount !== AMOUNT) {
     return NextResponse.json({ error: '결제 금액이 올바르지 않습니다' }, { status: 400 })
@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
       input_name: inputName,
       hanja_ids: hanjaIds ?? [],
       reading_raw: readingRaw ?? '',
+      extra_hanja: allSelectedHanja,
       status: 'pending',
       payment_key: paymentKey,
       order_id: orderId,
@@ -71,7 +72,7 @@ export async function POST(req: NextRequest) {
 
   // Claude API로 풀이 생성
   try {
-    const result = await generateFortune({ inputName, hanjaIds, readingRaw, supabase })
+    const result = await generateFortune({ inputName, hanjaIds, readingRaw, supabase, extraHanja })
     await supabase
       .from('fortunes')
       .update({ result, status: 'completed' })

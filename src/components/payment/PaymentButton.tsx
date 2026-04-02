@@ -44,9 +44,9 @@ export function PaymentButton({ inputName, selectedHanja }: Props) {
     <button
       onClick={handlePay}
       disabled={loading || !inputName.trim()}
-      className="w-full py-4 bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-purple-950 font-bold text-lg rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-yellow-500/20"
+      className="w-full py-4 bg-[#3D2B1F] hover:bg-[#2C1A0E] text-[#FAF5EA] font-bold text-lg rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed tracking-wide"
     >
-      {loading ? '결제창 열기...' : '990원으로 풀이 받기'}
+      {loading ? '결제창 열기…' : '✦ 운세 보기 · 990원 ✦'}
     </button>
   )
 }

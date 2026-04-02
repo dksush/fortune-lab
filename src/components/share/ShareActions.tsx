@@ -39,18 +39,18 @@ export function ShareActions({ uuid, inputName }: Props) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="flex gap-2">
       <button
         onClick={handleKakao}
-        className="w-full flex items-center justify-center gap-2 py-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 font-semibold rounded-xl transition-colors"
+        className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#FEE500] hover:bg-[#F5DB00] text-[#3C1E1E] font-semibold rounded-xl transition-colors text-sm"
       >
-        <span>💬</span> 카카오톡 공유
+        <span>💬</span> 카카오 공유
       </button>
       <button
         onClick={handleCopy}
-        className="w-full flex items-center justify-center gap-2 py-3 bg-purple-800 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors"
+        className="flex-1 flex items-center justify-center gap-2 py-3 border border-[#C4973A] hover:bg-[#FAF5EA] text-[#3D2B1F] font-semibold rounded-xl transition-colors text-sm"
       >
-        {copied ? '✓ 복사됨!' : '🔗 링크 복사'}
+        {copied ? '✓ 복사됨' : '🔗 링크 복사'}
       </button>
     </div>
   )

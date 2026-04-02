@@ -3,14 +3,21 @@ import { SupabaseClient } from '@supabase/supabase-js'
 
 const client = new Anthropic()
 
+export interface ExtraHanja {
+  character: string
+  reading: string
+  meaning: string
+}
+
 interface GenerateFortuneParams {
   inputName: string
   hanjaIds: string[]
   readingRaw: string
   supabase: SupabaseClient
+  extraHanja?: ExtraHanja[]  // DB에 없는 직접 입력 한자
 }
 
-export async function generateFortune({ inputName, hanjaIds, readingRaw, supabase }: GenerateFortuneParams): Promise<string> {
+export async function generateFortune({ inputName, hanjaIds, readingRaw, supabase, extraHanja }: GenerateFortuneParams): Promise<string> {
   let hanjaContext = ''
 
   if (hanjaIds.length > 0) {
@@ -22,6 +29,12 @@ export async function generateFortune({ inputName, hanjaIds, readingRaw, supabas
     if (data?.length) {
       hanjaContext = data.map(h => `${h.character}(${h.meaning} ${h.reading})`).join(', ')
     }
+  }
+
+  // 직접 입력한 한자 추가
+  if (extraHanja?.length) {
+    const extras = extraHanja.map(h => `${h.character}(${h.meaning} ${h.reading})`).join(', ')
+    hanjaContext = hanjaContext ? `${hanjaContext}, ${extras}` : extras
   }
 
   const nameDisplay = hanjaContext ? `${inputName} (${hanjaContext})` : inputName
