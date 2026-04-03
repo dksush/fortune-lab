@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>명문가 이름풀이</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#fbddca",
+              "inverse-on-surface": "#a39d8a",
+              "on-secondary-container": "#75471a",
+              "secondary-fixed": "#ffdcc1",
+              "outline": "#837b5c",
+              "on-primary": "#fff7f4",
+              "tertiary": "#695f28",
+              "surface-container-high": "#f2e8c8",
+              "secondary-container": "#ffdcc1",
+              "on-error-container": "#6e1400",
+              "primary-dim": "#644f41",
+              "on-background": "#383219",
+              "secondary-fixed-dim": "#ffca9e",
+              "on-tertiary": "#fff8e8",
+              "error-container": "#fd795a",
+              "surface": "#fff9ed",
+              "on-secondary-fixed": "#5f3508",
+              "on-secondary": "#fff7f4",
+              "on-error": "#fff7f6",
+              "on-tertiary-fixed-variant": "#6d632b",
+              "surface-variant": "#ede2be",
+              "surface-dim": "#e4dab6",
+              "tertiary-fixed-dim": "#eee09b",
+              "tertiary-fixed": "#fdefa8",
+              "on-surface": "#383219",
+              "secondary-dim": "#76491b",
+              "inverse-primary": "#fedfcd",
+              "on-primary-fixed-variant": "#6d5749",
+              "primary": "#715a4c",
+              "surface-tint": "#715a4c",
+              "primary-container": "#fbddca",
+              "error-dim": "#791903",
+              "surface-bright": "#fff9ed",
+              "on-tertiary-container": "#625922",
+              "error": "#a73b21",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#ede2be",
+              "on-primary-fixed": "#4f3b2e",
+              "inverse-surface": "#110e04",
+              "background": "#fff9ed",
+              "surface-container": "#f7eed0",
+              "secondary": "#845426",
+              "on-secondary-fixed-variant": "#805123",
+              "on-tertiary-fixed": "#4f4611",
+              "on-surface-variant": "#665f42",
+              "surface-container-low": "#fcf3d8",
+              "primary-fixed-dim": "#edcfbd",
+              "tertiary-container": "#fdefa8",
+              "tertiary-dim": "#5d531d",
+              "outline-variant": "#bbb290",
+              "on-primary-container": "#634d40"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif KR"],
+              "body": ["Noto Serif KR"],
+              "label": ["Noto Serif KR"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>body {
+    background-color: #F5EDD8;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuD6skzfhsdVujmWbI2t8RAhkNFiIa9FYzb6ZQo1W4NjrDiCEDLoWOOYZtZocZ7wpLcJfFInWWPFVILRm9CxuHLV3zOS52iYq5WeBD8kti60kQi_4Soke5fEQqGJkr6hyhUvLJsK-LjfF4qYZ6Em5HZuvOCfT_94bfqWUkCz3GJDbTneUaSEDzsInQjDd-BvyB9tXqZhCIA44HfFodDLAIUsSLTx0ULinC1ZI-88-a6MH-HsdLKY5f-kGQSUECN2siHlU8MIiVXNmcY);
+    font-family: "Noto Serif KR", serif
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    vertical-align: middle
+    }
+.scroll-texture {
+    background: linear-gradient(to right, rgba(212, 184, 150, 0.2) 0%, transparent 5%, transparent 95%, rgba(212, 184, 150, 0.2) 100%)
+    }
+.custom-checkbox:checked {
+    background-color: #8B5A2B;
+    border-color: #8B5A2B
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-4 h-16 bg-[#F5EDD8] dark:bg-[#2C1A0E] border-b-2 border-[#D4B896] dark:border-[#8B5A2B] shadow-sm">
+<button class="text-[#3D2B1F] dark:text-[#FAF5EA] hover:bg-[#EDE0C4] dark:hover:bg-[#3D2B1F] transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-serif text-xl font-bold text-[#3D2B1F] dark:text-[#C4973A] tracking-tight">명문가 이름풀이</h1>
+<button class="text-[#3D2B1F] dark:text-[#FAF5EA] hover:bg-[#EDE0C4] dark:hover:bg-[#3D2B1F] transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined">history</span>
+</button>
+</header>
+<main class="pt-24 px-6 max-w-lg mx-auto">
+<!-- Header Decorative -->
+<div class="text-center mb-10">
+<div class="flex items-center justify-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[#8B5A2B] text-sm" style="font-variation-settings: 'FILL' 1;">local_florist</span>
+<h2 class="text-2xl font-bold text-[#3D2B1F] tracking-widest">✦ 이름풀이 ✦</h2>
+<span class="material-symbols-outlined text-[#8B5A2B] text-sm" style="font-variation-settings: 'FILL' 1;">local_florist</span>
+</div>
+<p class="text-sm text-[#9C8B7A]">조선의 정통 비책으로 성명의 기운을 풀다</p>
+</div>
+<!-- Section 1: Name Input -->
+<section class="mb-10 relative">
+<div class="absolute -left-4 top-0 bottom-0 w-1 bg-[#D4B896]/30"></div>
+<label class="block text-lg font-bold text-[#3D2B1F] mb-6 pl-2">이름을 한 글자씩 입력하세요</label>
+<div class="space-y-8">
+<!-- Row 1 -->
+<div class="relative">
+<div class="flex items-center gap-4">
+<div class="flex-1">
+<input class="w-full bg-[#FAF5EA] border-2 border-[#D4B896] text-2xl text-center py-3 rounded-none focus:ring-[#8B5A2B] focus:border-[#8B5A2B] transition-all" placeholder="성" type="text" value="홍"/>
+</div>
+<div class="w-20 h-14 border-2 border-[#C4973A] bg-white flex items-center justify-center">
+<span class="text-2xl font-bold text-[#8B5A2B]">紅</span>
+</div>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-2">
+<button class="flex items-center justify-between px-3 py-2 border border-[#D4B896] bg-white hover:bg-[#F5EDD8] transition-colors">
+<span class="text-xl font-bold text-[#3D2B1F]">紅</span>
+<span class="text-xs text-[#9C8B7A]">붉을 홍</span>
+</button>
+<button class="flex items-center justify-between px-3 py-2 border border-[#D4B896] bg-white hover:bg-[#F5EDD8] transition-colors">
+<span class="text-xl font-bold text-[#3D2B1F]">洪</span>
+<span class="text-xs text-[#9C8B7A]">클 홍</span>
+</button>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="relative">
+<div class="flex items-center gap-4">
+<div class="flex-1">
+<input class="w-full bg-[#FAF5EA] border-2 border-[#D4B896] text-2xl text-center py-3 rounded-none focus:ring-[#8B5A2B] focus:border-[#8B5A2B] transition-all" placeholder="이름" type="text"/>
+</div>
+<div class="w-20 h-14 border-2 border-dashed border-[#D4B896] bg-transparent flex items-center justify-center">
+<span class="text-sm text-[#9C8B7A]">한자 선택</span>
+</div>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="relative">
+<div class="flex items-center gap-4">
+<div class="flex-1">
+<input class="w-full bg-[#FAF5EA] border-2 border-[#D4B896] text-2xl text-center py-3 rounded-none focus:ring-[#8B5A2B] focus:border-[#8B5A2B] transition-all" placeholder="이름" type="text"/>
+</div>
+<div class="w-20 h-14 border-2 border-dashed border-[#D4B896] bg-transparent flex items-center justify-center">
+<span class="text-sm text-[#9C8B7A]">한자 선택</span>
+</div>
+</div>
+</div>
+</div>
+<button class="mt-6 flex items-center gap-1 text-[#8B5A2B] font-medium border-b border-dotted border-[#8B5A2B] pb-1 mx-auto">
+<span class="material-symbols-outlined text-sm">add</span>
+                글자 추가
+            </button>
+</section>
+<!-- Section 2: Birth Date -->
+<section class="mb-10">
+<label class="block text-lg font-bold text-[#3D2B1F] mb-3">생년월일</label>
+<div class="relative">
+<input class="w-full bg-[#FAF5EA] border-2 border-[#D4B896] px-4 py-4 rounded-none focus:ring-[#8B5A2B] focus:border-[#8B5A2B] text-lg font-serif" type="text" value="1990.03.15"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-[#8B5A2B]">calendar_today</span>
+</div>
+</section>
+<!-- Section 3: Birth Time -->
+<section class="mb-12">
+<label class="block text-lg font-bold text-[#3D2B1F] mb-3">태어난 시간</label>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<div class="flex bg-[#EDE0C4] p-1 rounded-lg">
+<button class="px-4 py-2 bg-white text-[#3D2B1F] font-bold shadow-sm rounded-md">오전</button>
+<button class="px-4 py-2 text-[#9C8B7A]">오후</button>
+</div>
+<div class="flex-1 flex gap-2">
+<div class="flex-1">
+<select class="w-full bg-[#FAF5EA] border-2 border-[#D4B896] py-3 rounded-none focus:ring-[#8B5A2B] focus:border-[#8B5A2B]">
+<option>12시</option>
+<option>01시</option>
+<option>02시</option>
+</select>
+</div>
+<div class="flex-1">
+<select class="w-full bg-[#FAF5EA] border-2 border-[#D4B896] py-3 rounded-none focus:ring-[#8B5A2B] focus:border-[#8B5A2B]">
+<option>00분</option>
+<option>15분</option>
+<option>30분</option>
+</select>
+</div>
+</div>
+</div>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="w-5 h-5 border-2 border-[#D4B896] rounded-sm text-[#8B5A2B] focus:ring-[#8B5A2B] bg-[#FAF5EA]" type="checkbox"/>
+<span class="text-[#3D2B1F] text-sm">시간을 모릅니다</span>
+</label>
+</div>
+</section>
+<!-- CTA and Payment Info -->
+<div class="mt-16 text-center">
+<button class="group w-full bg-[#3D2B1F] text-[#F5EDD8] py-5 rounded-none font-bold text-xl flex items-center justify-center gap-3 active:scale-[0.98] transition-transform relative overflow-hidden">
+<span class="absolute left-4 opacity-30 text-3xl">✦</span>
+                운세 보기
+                <span class="material-symbols-outlined">auto_stories</span>
+<span class="absolute right-4 opacity-30 text-3xl">✦</span>
+</button>
+<div class="mt-4 flex items-center justify-center gap-1.5 text-[#9C8B7A] text-xs">
+<span class="material-symbols-outlined text-sm">shield</span>
+                토스페이먼츠 안전 결제
+            </div>
+</div>
+</main>
+<!-- Decorative Bottom Wave Pattern -->
+<div class="fixed bottom-16 left-0 w-full h-4 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle at 10px -7px, transparent 8px, #8B5A2B 8px, #8B5A2B 10px, transparent 10px); background-size: 20px 20px;"></div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 pb-safe bg-[#F5EDD8] dark:bg-[#2C1A0E] border-t-2 border-[#D4B896] dark:border-[#8B5A2B] shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-[#9C8B7A] hover:text-[#3D2B1F] dark:hover:text-[#FAF5EA] tap-highlight-none active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-serif text-[11px] font-medium mt-1">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#8B5A2B] dark:text-[#C4973A] font-bold bg-[#EDE0C4]/50 dark:bg-[#3D2B1F]/50 rounded-xl px-3 py-1 tap-highlight-none active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">ink_pen</span>
+<span class="font-serif text-[11px] font-medium mt-1">이름풀이</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-[#9C8B7A] hover:text-[#3D2B1F] dark:hover:text-[#FAF5EA] tap-highlight-none active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-serif text-[11px] font-medium mt-1">사주</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-[#9C8B7A] hover:text-[#3D2B1F] dark:hover:text-[#FAF5EA] tap-highlight-none active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-serif text-[11px] font-medium mt-1">내 정보</span>
+</a>
+</nav>
+<!-- Side Decoration (Web only) -->
+<div class="hidden lg:block fixed left-10 top-1/2 -translate-y-1/2 w-48 opacity-10">
+<img class="w-full grayscale" data-alt="Traditional Korean ink wash painting of mountains and clouds with minimalist composition and soft grey tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUSdBLRGzECfj37Wr4LUGcBjgpSpm4McaHb20U_gUqQEFZAYcV_gMCgzGZMDKgonzRioUtpGv2UCEyGucCsrhv5bfv7npNaXhEdKH3PXuvHfHbcM7EfKx7SLkL2DsfkRYBTggW_HctMGS4f2lfT7prH351UnWl6JK8QMCgAAWQPWZJxl2XWFPoj0LF6pRFPgZ0MDPMjqC3IcvEmMAo2TaxgcMLbSOAoITv8ylB-sHn9RFSa_geydMZC9gt4gh5dKBnRdIIgNTBN8Y"/>
+</div>
+<div class="hidden lg:block fixed right-10 top-1/2 -translate-y-1/2 w-48 opacity-10 scale-x-[-1]">
+<img class="w-full grayscale" data-alt="Traditional Korean ink wash painting of mountains and clouds with minimalist composition and soft grey tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA40exQPgD9MRlINCbE4ogLw9tEeplD4lUl0Bja3oPgDfM9zhADN5wA8Tzf3CUGFO6q-4urSSxv8mnWXHWOSA6dWqGRz2lHVCYKwqiWFfIWjFursk0MChYhJ_LuX7Ew1Tpn8K-3MwnpWsJkqi41WfWXTvP_mBoe-iaFJWVWnHLC90Rpux5Tkjal8-D_Df25ZHsNeJHlyhOO6RQU1bwmw1nLKjU4-7dGfXI1TNxYerDKFWiKHvA8JUvjXiuT4KxmupK_JSIHAFy4wtI"/>
+</div>
+</body></html>

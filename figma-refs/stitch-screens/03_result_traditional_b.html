@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>이름풀이 결과 - 사주 명리</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;400;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary": "#fff7f4",
+              "surface-bright": "#fff9ed",
+              "inverse-surface": "#110e04",
+              "surface-tint": "#715a4c",
+              "primary-dim": "#644f41",
+              "on-background": "#383219",
+              "surface-container-highest": "#ede2be",
+              "surface": "#fff9ed",
+              "error-dim": "#791903",
+              "surface-container-low": "#fcf3d8",
+              "outline-variant": "#bbb290",
+              "on-error": "#fff7f6",
+              "on-primary-fixed": "#4f3b2e",
+              "secondary-dim": "#76491b",
+              "on-error-container": "#6e1400",
+              "surface-container-low": "#fcf3d8",
+              "tertiary-dim": "#5d531d",
+              "inverse-on-surface": "#a39d8a",
+              "primary-container": "#fbddca",
+              "on-primary-fixed-variant": "#6d5749",
+              "primary": "#715a4c",
+              "secondary": "#845426",
+              "on-primary-container": "#634d40",
+              "on-tertiary-container": "#625922",
+              "on-secondary-fixed": "#5f3508",
+              "secondary-container": "#ffdcc1",
+              "primary-fixed": "#fbddca",
+              "on-primary": "#fff7f4",
+              "on-surface-variant": "#665f42",
+              "on-secondary-fixed-variant": "#805123",
+              "secondary-fixed": "#ffdcc1",
+              "tertiary": "#695f28",
+              "primary-fixed-dim": "#edcfbd",
+              "surface-dim": "#e4dab6",
+              "background": "#fff9ed",
+              "tertiary-container": "#fdefa8",
+              "on-secondary-container": "#75471a",
+              "secondary-fixed-dim": "#ffca9e",
+              "outline": "#837b5c",
+              "on-tertiary-fixed-variant": "#6d632b",
+              "error-container": "#fd795a",
+              "tertiary-fixed-dim": "#eee09b",
+              "surface-variant": "#ede2be",
+              "surface-container": "#f7eed0",
+              "on-tertiary": "#fff8e8",
+              "surface-container-high": "#f2e8c8",
+              "tertiary-fixed": "#fdefa8",
+              "on-tertiary-fixed": "#4f4611",
+              "on-surface": "#383219",
+              "inverse-primary": "#fedfcd",
+              "error": "#a73b21"
+            },
+            fontFamily: {
+              "noto-serif-kr": ["Noto Serif KR", "serif"],
+              "headline": ["Noto Serif KR", "serif"],
+              "body": ["Noto Serif KR", "serif"],
+              "label": ["Noto Serif KR", "serif"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #F5EDD8;
+            color: #3D2B1F;
+            font-family: 'Noto Serif KR', serif;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm76-52c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zm-3 46c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zM11 40c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zm60-25c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1zM30 6c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z' fill='%23D4B896' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .scroll-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: #F5EDD8;
+            position: relative;
+            box-shadow: 0 0 50px rgba(61, 43, 31, 0.05);
+        }
+        .scroll-cap {
+            height: 24px;
+            background: linear-gradient(to right, #3D2B1F, #8B5A2B, #3D2B1F);
+            border-radius: 4px;
+        }
+        .traditional-border {
+            border: 1px solid #D4B896;
+            position: relative;
+        }
+        .traditional-border::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px solid rgba(212, 184, 150, 0.3);
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<div class="scroll-container min-h-screen pb-32">
+<!-- Shared Component: TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-16 bg-[#F5EDD8] dark:bg-stone-900 border-b border-[#D4B896] dark:border-stone-800 sticky top-0 z-50 transition-colors duration-300">
+<div class="flex items-center">
+<button class="material-symbols-outlined text-[#3D2B1F] dark:text-[#EDE0C4] p-2 hover:bg-[#EDE0C4]/50 dark:hover:bg-stone-800 rounded-full transition-colors">arrow_back</button>
+</div>
+<h1 class="font-noto-serif-kr text-xl font-bold tracking-tight text-[#3D2B1F] dark:text-[#EDE0C4]">이름풀이 결과</h1>
+<div class="w-10"></div> <!-- Spacer for center alignment -->
+</header>
+<main class="px-6 pt-12 space-y-16">
+<!-- Hero: Name Display -->
+<section class="text-center space-y-4 animate-fade-in">
+<span class="text-[#C4973A] text-sm tracking-[0.3em] font-bold">✦ 이름풀이 ✦</span>
+<div class="py-6 border-y border-[#D4B896]/40">
+<h2 class="text-5xl font-black text-[#3D2B1F] tracking-widest mb-2">홍 민 준</h2>
+<p class="text-2xl font-serif text-[#8B5A2B] tracking-[0.5em]">洪 敏 俊</p>
+</div>
+<div class="flex items-center justify-center space-x-2 text-sm text-[#9C8B7A]">
+<span class="material-symbols-outlined text-xs">calendar_month</span>
+<p>1990년 3월 15일 오전 10시</p>
+</div>
+</section>
+<!-- Section 1: Five Elements (오행) -->
+<section class="space-y-6">
+<div class="flex items-center space-x-3">
+<div class="h-[1px] flex-1 bg-[#D4B896]"></div>
+<h3 class="font-bold text-lg text-[#3D2B1F]">이름의 기운</h3>
+<div class="h-[1px] flex-1 bg-[#D4B896]"></div>
+</div>
+<div class="grid grid-cols-5 gap-2 text-center">
+<div class="flex flex-col items-center space-y-2 opacity-40">
+<div class="w-12 h-12 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold">木</div>
+<span class="text-xs font-medium">목</span>
+</div>
+<div class="flex flex-col items-center space-y-2 scale-110">
+<div class="w-12 h-12 rounded-full bg-red-700 flex items-center justify-center text-white font-bold ring-4 ring-[#C4973A]/20">火</div>
+<span class="text-xs font-bold text-[#8B5A2B]">화</span>
+</div>
+<div class="flex flex-col items-center space-y-2 scale-110">
+<div class="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold ring-4 ring-[#C4973A]/20">土</div>
+<span class="text-xs font-bold text-[#8B5A2B]">토</span>
+</div>
+<div class="flex flex-col items-center space-y-2 opacity-40">
+<div class="w-12 h-12 rounded-full bg-stone-400 flex items-center justify-center text-white font-bold">金</div>
+<span class="text-xs font-medium">금</span>
+</div>
+<div class="flex flex-col items-center space-y-2 opacity-40">
+<div class="w-12 h-12 rounded-full bg-blue-800 flex items-center justify-center text-white font-bold">水</div>
+<span class="text-xs font-medium">수</span>
+</div>
+</div>
+<p class="text-center text-sm text-[#9C8B7A] leading-relaxed px-4">
+                    당신의 이름은 <span class="text-[#8B5A2B] font-bold">화(火)</span>와 <span class="text-[#8B5A2B] font-bold">토(土)</span>의 기운이 강하게 어우러져 열정과 안정감을 동시에 갖추고 있습니다.
+                </p>
+</section>
+<!-- Section 2: Character Meaning -->
+<section class="space-y-6">
+<h3 class="font-bold text-lg text-[#3D2B1F] text-center">한자 이름 풀이</h3>
+<div class="grid grid-cols-1 gap-4">
+<div class="bg-[#FAF5EA] p-5 rounded-lg border border-[#D4B896] shadow-sm flex items-start space-x-4">
+<div class="text-3xl font-serif text-[#3D2B1F] w-12 h-12 flex items-center justify-center bg-white border border-[#D4B896] rounded">洪</div>
+<div class="flex-1">
+<p class="font-bold text-[#8B5A2B] mb-1">홍 (넓을 홍)</p>
+<p class="text-sm leading-relaxed text-[#665f42]">물줄기가 넓게 퍼져나가는 형상으로, 도량과 포용력이 넓어 만인을 품는 지도자의 기상을 의미합니다.</p>
+</div>
+</div>
+<div class="bg-[#FAF5EA] p-5 rounded-lg border border-[#D4B896] shadow-sm flex items-start space-x-4">
+<div class="text-3xl font-serif text-[#3D2B1F] w-12 h-12 flex items-center justify-center bg-white border border-[#D4B896] rounded">敏</div>
+<div class="flex-1">
+<p class="font-bold text-[#8B5A2B] mb-1">민 (민첩할 민)</p>
+<p class="text-sm leading-relaxed text-[#665f42]">두뇌 회전이 빠르고 재치가 있으며, 기회를 포착하여 성취를 이루는 총명함을 상징합니다.</p>
+</div>
+</div>
+<div class="bg-[#FAF5EA] p-5 rounded-lg border border-[#D4B896] shadow-sm flex items-start space-x-4">
+<div class="text-3xl font-serif text-[#3D2B1F] w-12 h-12 flex items-center justify-center bg-white border border-[#D4B896] rounded">俊</div>
+<div class="flex-1">
+<p class="font-bold text-[#8B5A2B] mb-1">준 (준걸 준)</p>
+<p class="text-sm leading-relaxed text-[#665f42]">빼어난 외모와 재능을 겸비하여 대중 앞에 빛나는 존재감을 드러내는 삶을 약속합니다.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Saju Chart -->
+<section class="space-y-6">
+<h3 class="font-bold text-lg text-[#3D2B1F] text-center">사주 사반 (四柱)</h3>
+<div class="grid grid-cols-4 traditional-border bg-white overflow-hidden text-center divide-x divide-[#D4B896]">
+<div class="py-4">
+<p class="text-[10px] text-[#9C8B7A] mb-2">時柱 (시)</p>
+<p class="text-2xl font-serif mb-1">庚</p>
+<p class="text-2xl font-serif text-[#C4973A]">辰</p>
+</div>
+<div class="py-4">
+<p class="text-[10px] text-[#9C8B7A] mb-2">日柱 (일)</p>
+<p class="text-2xl font-serif mb-1">丙</p>
+<p class="text-2xl font-serif text-[#C4973A]">戌</p>
+</div>
+<div class="py-4 bg-[#EDE0C4]/30">
+<p class="text-[10px] text-[#9C8B7A] mb-2">月柱 (월)</p>
+<p class="text-2xl font-serif mb-1">丁</p>
+<p class="text-2xl font-serif text-[#C4973A]">卯</p>
+</div>
+<div class="py-4">
+<p class="text-[10px] text-[#9C8B7A] mb-2">年柱 (년)</p>
+<p class="text-2xl font-serif mb-1">庚</p>
+<p class="text-2xl font-serif text-[#C4973A]">午</p>
+</div>
+</div>
+</section>
+<!-- Section 4: Affection -->
+<section class="space-y-4 px-2">
+<div class="border-l-4 border-[#C4973A] pl-6 space-y-4">
+<h3 class="font-bold text-lg text-[#3D2B1F]">이름과 사주의 인연</h3>
+<p class="text-[15px] leading-loose text-[#3D2B1F]/80">
+                        당신의 사주는 뜨거운 태양과 같은 열기를 품고 있습니다. 이름의 '민(敏)' 자는 이 열기를 지혜롭게 다스릴 수 있는 민첩한 물줄기가 되어 균형을 잡아주고 있습니다.
+                    </p>
+<p class="text-[15px] leading-loose text-[#3D2B1F]/80">
+                        특히 '준(俊)' 자의 기운이 사주의 관성운과 맞물려 중년 이후 큰 명예를 얻게 될 흐름을 보이고 있습니다. 이름이 사주의 부족함을 채워주는 아주 길한 조합입니다.
+                    </p>
+</div>
+</section>
+<!-- Section 5: Summary Card -->
+<section class="bg-[#3D2B1F] p-8 rounded-xl text-[#F5EDD8] relative overflow-hidden">
+<div class="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
+<span class="material-symbols-outlined text-9xl">auto_awesome</span>
+</div>
+<h3 class="text-xl font-bold mb-6 flex items-center">
+<span class="w-6 h-[1px] bg-[#C4973A] mr-3"></span>
+                    종합 운세
+                </h3>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="px-3 py-1 bg-[#8B5A2B] text-xs font-bold rounded-full">#성장</span>
+<span class="px-3 py-1 bg-[#8B5A2B] text-xs font-bold rounded-full">#인내</span>
+<span class="px-3 py-1 bg-[#8B5A2B] text-xs font-bold rounded-full">#도약</span>
+</div>
+<p class="text-sm leading-relaxed text-[#EDE0C4]">
+                    강인한 생명력과 유연한 사고가 조화를 이루는 운세입니다. 서두르지 않아도 성과는 반드시 돌아오니 자신을 믿고 정진하십시오.
+                </p>
+</section>
+<!-- Section 6: Quote -->
+<section class="text-center py-12 px-6">
+<span class="material-symbols-outlined text-[#C4973A] mb-4">format_quote</span>
+<blockquote class="text-2xl font-bold text-[#3D2B1F] leading-snug break-keep">
+                    "나무가 하늘을 향해 자라듯,<br/>올해는 당신의 해입니다."
+                </blockquote>
+</section>
+<!-- Actions -->
+<section class="space-y-3 pt-6">
+<button class="w-full py-4 rounded-lg border-2 border-[#C4973A] text-[#8B5A2B] font-bold hover:bg-[#C4973A] hover:text-white transition-all flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined text-sm">share</span>
+<span>결과 공유하기</span>
+</button>
+<button class="w-full py-4 rounded-lg bg-[#3D2B1F] text-[#F5EDD8] font-bold shadow-lg active:scale-95 transition-transform flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined text-sm">history_edu</span>
+<span>나도 내 이름의 기운을 알고 싶다</span>
+</button>
+</section>
+</main>
+<!-- Shared Component: BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-20 bg-[#F5EDD8] dark:bg-stone-950 border-t border-[#D4B896] dark:border-stone-800 bg-opacity-95 backdrop-blur-sm px-2 shadow-[0_-2px_10px_rgba(61,43,31,0.1)]">
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-stone-500 hover:text-[#3D2B1F] dark:hover:text-[#EDE0C4] transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-noto-serif-kr text-[11px] font-medium">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#8B5A2B] dark:text-[#C4973A] font-bold transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-noto-serif-kr text-[11px] font-medium">결과</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-stone-500 hover:text-[#3D2B1F] dark:hover:text-[#EDE0C4] transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1">auto_awesome</span>
+<span class="font-noto-serif-kr text-[11px] font-medium">사주</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-stone-500 hover:text-[#3D2B1F] dark:hover:text-[#EDE0C4] transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-noto-serif-kr text-[11px] font-medium">내 정보</span>
+</a>
+</nav>
+</div>
+<!-- Background Decoration Images -->
+<div class="fixed top-20 -left-10 w-40 h-40 opacity-10 pointer-events-none">
+<img class="w-full h-full object-contain grayscale" data-alt="Traditional Korean ink wash painting of pine tree branches on hanji paper texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsVyqU9kVtv6WY7J3MHqmqiZiMRA9u0o5Qb3VsbQGY1PQTjfnRMX-zArMvOeYc0NqPSoBBFvSoouQL6zS6Y_MlOdLsa_lmdIaTGlxMZ6HsOSift7_Z_cuapGRfISDGd_gxlmVKISN_JT01Cp46bN5muDGqG97gXSRUb9dIYTDa9AzuuDCb954vS2MQ9xXD03sFqUZYidldD6zpq5Udz51j9c97JbFp41US4glJ-C2yLqsrg_nV2vWOW7LmCAu-REV8nXS3OxqwRlw"/>
+</div>
+<div class="fixed bottom-32 -right-10 w-48 h-48 opacity-10 pointer-events-none">
+<img class="w-full h-full object-contain grayscale" data-alt="Traditional Korean roof tile pattern and decorative cloud motifs from ancient architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm-wjb6UwEIq5d2-bhRoAdiQTK2ZyuDNVCu-OxK8GrS2L-VDq5ihP7JtduUVtPor2GSJa3ZHIDuXn6ylaiCynuYYKXILirBYH-0e6Z4Gfce1sYkDG-8y9PBS2TLIwrYsA6arKfjoMH6uh4ymsE4BWAGZLVxYf7VoQlGpoT-RwS_2KLUR5Ap5bCgYlIROxND_bxY_YugcHp-22-CVuRMU1HPkj611dIUVVKq73gOYgtywHheJGqUHhOVElEJm-xBP7uqr8RfdgPaNU"/>
+</div>
+</body></html>

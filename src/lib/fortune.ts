@@ -9,58 +9,106 @@ export interface ExtraHanja {
   meaning: string
 }
 
+export interface FortuneResult {
+  hanja: {
+    char: string
+    reading: string
+    narrative: string
+  }[]
+  combined: string
+  element_summary: string
+  saju: {
+    innate: string
+    harmony: string
+    this_year: string
+  }
+  life_direction: {
+    talent: string
+    wealth: string
+    relationships: string
+  }
+  keywords: string[]
+  overall: string
+  quote: string
+}
+
 interface GenerateFortuneParams {
   inputName: string
   hanjaIds: string[]
   readingRaw: string
   supabase: SupabaseClient
-  extraHanja?: ExtraHanja[]  // DB에 없는 직접 입력 한자
+  extraHanja?: ExtraHanja[]
+  birthDate?: string
 }
 
-export async function generateFortune({ inputName, hanjaIds, readingRaw, supabase, extraHanja }: GenerateFortuneParams): Promise<string> {
-  let hanjaContext = ''
+export async function generateFortune({ inputName, hanjaIds, readingRaw, supabase, extraHanja, birthDate }: GenerateFortuneParams): Promise<string> {
+  let hanjaList: { character: string; reading: string; meaning: string }[] = []
 
   if (hanjaIds.length > 0) {
     const { data } = await supabase
       .from('hanja')
       .select('character, reading, meaning')
       .in('id', hanjaIds)
-
-    if (data?.length) {
-      hanjaContext = data.map(h => `${h.character}(${h.meaning} ${h.reading})`).join(', ')
-    }
+    if (data?.length) hanjaList = data
   }
 
-  // 직접 입력한 한자 추가
   if (extraHanja?.length) {
-    const extras = extraHanja.map(h => `${h.character}(${h.meaning} ${h.reading})`).join(', ')
-    hanjaContext = hanjaContext ? `${hanjaContext}, ${extras}` : extras
+    hanjaList = [...hanjaList, ...extraHanja.map(h => ({ character: h.character, reading: h.reading, meaning: h.meaning }))]
   }
 
-  const nameDisplay = hanjaContext ? `${inputName} (${hanjaContext})` : inputName
+  const hanjaDesc = hanjaList.map(h => `${h.character}(${h.meaning} ${h.reading})`).join(', ')
+  const nameDisplay = hanjaDesc ? `${inputName} (${hanjaDesc})` : inputName
+  const birthInfo = birthDate ? `생년월일: ${birthDate}` : '생년월일: 미입력'
+  const currentYear = new Date().getFullYear()
 
   const message = await client.messages.create({
     model: 'claude-opus-4-6',
-    max_tokens: 1024,
+    max_tokens: 3000,
     messages: [
       {
         role: 'user',
-        content: `당신은 40년 경력의 한국 전통 철학관 선생님입니다.
-이름 "${nameDisplay}"에 대한 풀이를 해주세요.
+        content: `당신은 40년 경력의 한국 전통 철학관 선생님입니다. 진중하고 신비로운 어투로, 단순한 사전 풀이가 아닌 그 사람의 삶과 운명에 미치는 영향을 중심으로 풀어주세요.
 
-다음 형식으로 작성해주세요:
-1. **이름의 전체적인 기운** (2-3문장)
-2. **한자별 의미와 오행** (각 글자당 2-3문장)
-3. **음양 조화** (1-2문장)
-4. **이 이름을 가진 사람의 성격과 운명** (3-4문장)
-5. **행운의 방향과 색** (1-2문장)
+이름: ${nameDisplay}
+${birthInfo}
 
-철학관 특유의 진중하고 신비로운 어투로, 따뜻하면서도 통찰력 있게 풀이해주세요.`,
+아래 JSON 형식으로만 답하세요. 마크다운 코드블록 없이 순수 JSON만 출력하세요.
+
+{
+  "hanja": [
+    {
+      "char": "한자 한 글자",
+      "reading": "음독 한 글자",
+      "narrative": "이 한자가 이름에서 부여하는 기운과 성품을 철학관 어투로 3-4문장. 한자의 원형적 의미에서 출발해 그 사람의 기질·운명에 미치는 영향까지 서술."
+    }
+  ],
+  "combined": "세 글자(혹은 전체 글자)가 합쳐졌을 때 만들어내는 전체 기운과 인상을 3-4문장으로. 각 글자의 기운이 어떻게 어우러지고 상승작용을 일으키는지 서술.",
+  "element_summary": "이름 전체의 오행 기운을 한 문장으로 요약.",
+  "saju": {
+    "innate": "생년월일로 본 타고난 사주 기운과 성격적 본질을 4-5문장으로. 어떤 기운이 강하고 어떤 기운이 부족한지, 그것이 삶의 경향성·성격에 어떻게 나타나는지 구체적으로.",
+    "harmony": "이 서비스의 핵심 섹션. 각 한자 글자(${hanjaDesc})를 직접 언급하며 사주와 어떻게 맞물리는지 5-6문장으로 상세히 서술. 예) '安의 고요한 기운이 사주의 급한 물결을 다스리고, 鉉의 金 기운이 부족한 결단력을 채워주며...' 식으로 각 글자가 사주의 어떤 부분을 보완하거나 강화하는지 구체적·유기적으로 연결. 이름과 사주가 상생하는 부분과 주의할 상극 관계도 언급.",
+    "this_year": "${currentYear}년 올해 운세를 4-5문장으로. 올해의 천간지지와 이름 한자(${hanjaDesc})가 어떻게 맞물리는지 한자를 직접 언급하며 서술. 올해 특히 어떤 한자의 기운이 강하게 작용하는지, 기회와 주의할 점."
+  },
+  "life_direction": {
+    "talent": "이름 한자(${hanjaDesc})와 사주가 암시하는 타고난 재능과 적성을 3-4문장으로. 어떤 한자의 어떤 기운이 어떤 분야의 재능을 강화하는지 한자를 직접 언급하며 서술.",
+    "wealth": "재물운과 직업운을 3-4문장으로. 한자의 기운과 연결하여 돈과 일이 어떤 방식으로 따라오는지, 어떤 한자의 기운을 활용해야 하는지 구체적으로.",
+    "relationships": "인간관계와 대인운을 3-4문장으로. 이름 한자의 기운이 대인관계에 어떻게 나타나는지, 어떤 기운을 가진 사람과 잘 맞는지 한자를 연결하여 서술."
+  },
+  "keywords": ["이 이름과 사주를 대표하는 키워드 3-5개"],
+  "overall": "이름 전체를 아우르는 종합 총평을 3-4문장으로. 이 사람이 가진 가장 큰 강점과 인생의 방향성.",
+  "quote": "이 이름을 가진 사람에게 건네는 철학관식 한 마디. 고사성어나 자연의 이치를 빌려 표현해도 좋음."
+}`,
       },
     ],
   })
 
   const content = message.content[0]
   if (content.type !== 'text') throw new Error('Unexpected response type')
-  return content.text
+
+  let text = content.text.trim()
+  if (text.startsWith('```')) {
+    text = text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim()
+  }
+  JSON.parse(text)
+  return text
 }

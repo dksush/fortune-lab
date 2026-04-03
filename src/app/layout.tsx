@@ -1,6 +1,14 @@
 import type { Metadata } from 'next'
 import { KakaoInit } from '@/components/KakaoInit'
 import './globals.css'
+import { Noto_Serif_KR } from 'next/font/google'
+
+const notoSerifKR = Noto_Serif_KR({
+  subsets: ['latin'],
+  weight: ['400', '500', '700', '900'],
+  variable: '--font-noto-serif-kr',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: '이름 풀이 | 내 이름의 기운을 알아보세요',
@@ -14,8 +22,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
-      <body className="bg-[#F5EDD8] text-[#2C1A0E] min-h-screen antialiased">
+    <html lang="ko" className={notoSerifKR.variable}>
+      <body className="bg-[#F5EDD8] text-[#2C1A0E] min-h-screen antialiased font-serif">
         {children}
         <KakaoInit />
       </body>

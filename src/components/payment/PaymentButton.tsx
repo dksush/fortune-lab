@@ -8,9 +8,10 @@ import { Hanja } from '@/types'
 interface Props {
   inputName: string
   selectedHanja: (Hanja | null)[]
+  birthDate?: string
 }
 
-export function PaymentButton({ inputName, selectedHanja }: Props) {
+export function PaymentButton({ inputName, selectedHanja, birthDate = '' }: Props) {
   const [loading, setLoading] = useState(false)
 
   const handlePay = async () => {
@@ -27,7 +28,7 @@ export function PaymentButton({ inputName, selectedHanja }: Props) {
         amount: { currency: 'KRW', value: 990 },
         orderId,
         orderName: `${inputName} 이름 풀이`,
-        successUrl: `${window.location.origin}/payment/success?inputName=${encodeURIComponent(inputName)}&hanjaIds=${selectedHanja.filter(Boolean).map(h => h!.id).join(',')}`,
+        successUrl: `${window.location.origin}/payment/success?inputName=${encodeURIComponent(inputName)}&hanjaIds=${selectedHanja.filter(Boolean).map(h => h!.id).join(',')}&birthDate=${encodeURIComponent(birthDate)}`,
         failUrl: `${window.location.origin}/payment/fail`,
         card: { useEscrow: false },
       })

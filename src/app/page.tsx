@@ -63,6 +63,14 @@ export default function HomePage() {
     setBirthDate(formatted)
   }
 
+  const birthDateForApi = (() => {
+    if (!birthDate) return ''
+    if (timeUnknown || (!birthTime.hour && !birthTime.minute)) return birthDate
+    const h = birthTime.hour ? `${birthTime.ampm} ${birthTime.hour}시` : ''
+    const m = birthTime.minute ? ` ${birthTime.minute}분` : ''
+    return `${birthDate} ${h}${m}`.trim()
+  })()
+
   const handleDevTest = async () => {
     if (!inputName.trim()) return
     setDevLoading(true)
@@ -70,7 +78,7 @@ export default function HomePage() {
       const res = await fetch('/api/dev/fortune', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ inputName, hanjaIds, readingRaw: inputName, extraHanja, allSelectedHanja }),
+        body: JSON.stringify({ inputName, hanjaIds, readingRaw: inputName, extraHanja, allSelectedHanja, birthDate: birthDateForApi }),
       })
       const data = await res.json()
       if (data.uuid) router.push(`/result/${data.uuid}`)
@@ -183,7 +191,7 @@ export default function HomePage() {
 
         <div className="space-y-2">
           <p className="text-center text-[#B0A090] text-xs">토스페이먼츠 안전 결제 · 카드 / 카카오페이 / 네이버페이</p>
-          <PaymentButton inputName={inputName} selectedHanja={selectedHanja} />
+          <PaymentButton inputName={inputName} selectedHanja={selectedHanja} birthDate={birthDateForApi} />
         </div>
 
         {isDev && (

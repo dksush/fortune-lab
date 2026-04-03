@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>이름풀이 - 결과</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#625922",
+              "surface-bright": "#fff9ed",
+              "surface-dim": "#e4dab6",
+              "on-primary-fixed-variant": "#6d5749",
+              "tertiary-fixed": "#fdefa8",
+              "inverse-surface": "#110e04",
+              "inverse-primary": "#fedfcd",
+              "error-container": "#fd795a",
+              "on-primary-container": "#634d40",
+              "secondary-fixed-dim": "#ffca9e",
+              "primary-fixed": "#fbddca",
+              "surface-variant": "#ede2be",
+              "surface-container-highest": "#ede2be",
+              "error": "#a73b21",
+              "primary-fixed-dim": "#edcfbd",
+              "on-secondary-container": "#75471a",
+              "surface-container-low": "#fcf3d8",
+              "surface-container-high": "#f2e8c8",
+              "secondary": "#845426",
+              "tertiary": "#695f28",
+              "primary": "#715a4c",
+              "on-surface-variant": "#665f42",
+              "on-tertiary": "#fff8e8",
+              "surface-tint": "#715a4c",
+              "background": "#F5EDD8",
+              "on-tertiary-fixed-variant": "#6d632b",
+              "tertiary-fixed-dim": "#eee09b",
+              "surface-container": "#f7eed0",
+              "on-secondary": "#fff7f4",
+              "primary-container": "#fbddca",
+              "primary-dim": "#644f41",
+              "on-error-container": "#6e1400",
+              "on-surface": "#383219",
+              "on-secondary-fixed": "#5f3508",
+              "outline": "#837b5c",
+              "on-primary": "#fff7f4",
+              "error-dim": "#791903",
+              "surface-container-lowest": "#ffffff",
+              "secondary-dim": "#76491b",
+              "secondary-fixed": "#ffdcc1",
+              "on-background": "#383219",
+              "tertiary-dim": "#5d531d",
+              "surface": "#fff9ed",
+              "tertiary-container": "#fdefa8",
+              "outline-variant": "#bbb290",
+              "inverse-on-surface": "#a39d8a",
+              "on-error": "#fff7f6",
+              "on-tertiary-fixed": "#4f4611",
+              "on-secondary-fixed-variant": "#805123",
+              "secondary-container": "#ffdcc1",
+              "on-primary-fixed": "#4f3b2e"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif KR", "serif"],
+              "body": ["Noto Serif KR", "serif"],
+              "label": ["Noto Serif KR", "serif"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #F5EDD8;
+            background-image: radial-gradient(#D4B896 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            font-family: 'Noto Serif KR', serif;
+            color: #3D2B1F;
+        }
+        .scroll-texture {
+            background-image: linear-gradient(to bottom, #F5EDD8, #EDE0C4);
+            position: relative;
+        }
+        .scroll-texture::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='none'/%3E%3Cpath d='M10 10c5-5 10 0 10 5s-5 10-10 10-10-5-10-10 5-10 10-10zm20 20c5-5 10 0 10 5s-5 10-10 10-10-5-10-10 5-10 10-10zm20 20c5-5 10 0 10 5s-5 10-10 10-10-5-10-10 5-10 10-10zm20 20c5-5 10 0 10 5s-5 10-10 10-10-5-10-10 5-10 10-10z' fill='%238B5A2B' fill-opacity='0.4'/%3E%3C/svg%3E");
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-16 bg-[#F5EDD8] dark:bg-[#2C1A0E] border-b border-[#D4B896] dark:border-[#8B5A2B] transition-colors duration-300">
+<button class="w-10 h-10 flex items-center justify-center text-[#3D2B1F] dark:text-[#EDE0C4] hover:bg-[#EDE0C4]/50 dark:hover:bg-[#3D2B1F]/50 transition-colors duration-300 rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-serif text-lg font-bold tracking-tight text-[#3D2B1F] dark:text-[#EDE0C4]">이름풀이</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<main class="max-w-screen-sm mx-auto px-6 pt-24 pb-12 space-y-16">
+<!-- Header Section -->
+<section class="text-center space-y-8 animate-fade-in">
+<div class="inline-block px-4 py-1 border-y border-[#D4B896] text-[#8B5A2B] tracking-widest text-sm font-medium">
+                ✦ 이름풀이 ✦
+            </div>
+<div class="space-y-4">
+<h2 class="text-6xl font-black text-[#2C1A0E] tracking-tighter leading-tight">
+                    홍 민 준
+                </h2>
+<p class="text-3xl font-serif text-[#8B5A2B] tracking-[0.5em] opacity-80">
+                    洪 敏 俊
+                </p>
+</div>
+<div class="text-[#3D2B1F]/70 font-medium tracking-widest">
+                1990년 3월 15일
+            </div>
+<div class="flex justify-center items-center gap-4">
+<div class="h-px w-16 bg-gradient-to-r from-transparent to-[#D4B896]"></div>
+<div class="w-2 h-2 rotate-45 border border-[#8B5A2B]"></div>
+<div class="h-px w-16 bg-gradient-to-l from-transparent to-[#D4B896]"></div>
+</div>
+</section>
+<!-- Section 1: 이름의 기운 -->
+<section class="space-y-8">
+<div class="flex items-center gap-3">
+<span class="w-1 h-6 bg-[#C4973A]"></span>
+<h3 class="text-xl font-bold text-[#2C1A0E]">이름의 기운</h3>
+</div>
+<div class="flex justify-around items-end h-32 px-4">
+<!-- Wood -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-12 h-12 rounded-full border-2 border-gray-200 bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32] font-bold text-lg">木</div>
+<span class="text-xs text-[#9C8B7A]">나무</span>
+</div>
+<!-- Fire -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-full border-4 border-[#C4973A] bg-[#FFEBEE] flex items-center justify-center text-[#D32F2F] font-black text-xl shadow-lg ring-4 ring-[#C4973A]/10">火</div>
+<span class="text-xs text-[#3D2B1F] font-bold">불</span>
+</div>
+<!-- Earth -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-full border-4 border-[#C4973A] bg-[#FFFDE7] flex items-center justify-center text-[#FBC02D] font-black text-xl shadow-lg ring-4 ring-[#C4973A]/10">土</div>
+<span class="text-xs text-[#3D2B1F] font-bold">흙</span>
+</div>
+<!-- Metal -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-12 h-12 rounded-full border-2 border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-[#757575] font-bold text-lg">金</div>
+<span class="text-xs text-[#9C8B7A]">쇠</span>
+</div>
+<!-- Water -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-12 h-12 rounded-full border-2 border-gray-200 bg-[#E3F2FD] flex items-center justify-center text-[#1976D2] font-bold text-lg">水</div>
+<span class="text-xs text-[#9C8B7A]">물</span>
+</div>
+</div>
+<div class="bg-[#FAF5EA] border border-[#D4B896] p-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2 opacity-10">
+<span class="material-symbols-outlined text-6xl" data-icon="eco">eco</span>
+</div>
+<p class="text-[#3D2B1F] leading-relaxed relative z-10">
+                    당신의 이름은 <span class="text-[#C4973A] font-bold">화(火)</span>와 <span class="text-[#C4973A] font-bold">토(土)</span>의 기운이 강하게 어우러져 있습니다. 이는 뜨거운 열정이 단단한 대지 위에 뿌리를 내려, 풍요로운 결실을 맺는 형상입니다. 추진력이 강하면서도 결과가 헛되지 않은 길운을 품고 있습니다.
+                </p>
+</div>
+</section>
+<!-- Section 2: 이름 풀이 -->
+<section class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="w-1 h-6 bg-[#C4973A]"></span>
+<h3 class="text-xl font-bold text-[#2C1A0E]">이름 풀이</h3>
+</div>
+<div class="grid gap-6">
+<!-- Hanja Card 1 -->
+<div class="bg-white/60 border-l-4 border-l-[#8B5A2B] border-r border-t border-b border-[#D4B896] p-6 flex gap-6 items-start">
+<div class="flex flex-col items-center shrink-0">
+<span class="text-4xl font-serif text-[#2C1A0E] mb-1">洪</span>
+<span class="text-sm font-bold text-[#8B5A2B]">홍</span>
+</div>
+<div class="space-y-2">
+<h4 class="font-bold text-lg text-[#3D2B1F]">넓을 홍</h4>
+<p class="text-sm text-[#3D2B1F]/80 leading-relaxed">
+                            큰 물이 넘치는 형상으로, 도량이 넓고 원대한 꿈을 품고 있음을 상징합니다. 많은 이들을 품을 수 있는 포용력을 의미합니다.
+                        </p>
+</div>
+</div>
+<!-- Hanja Card 2 -->
+<div class="bg-white/60 border-l-4 border-l-[#C4973A] border-r border-t border-b border-[#D4B896] p-6 flex gap-6 items-start">
+<div class="flex flex-col items-center shrink-0">
+<span class="text-4xl font-serif text-[#2C1A0E] mb-1">敏</span>
+<span class="text-sm font-bold text-[#8B5A2B]">민</span>
+</div>
+<div class="space-y-2">
+<h4 class="font-bold text-lg text-[#3D2B1F]">민첩할 민</h4>
+<p class="text-sm text-[#3D2B1F]/80 leading-relaxed">
+                            총명하고 판단력이 빠르며, 기회를 포착하는 능력이 뛰어납니다. 지혜로운 행동으로 주변의 신뢰를 얻는 자질을 뜻합니다.
+                        </p>
+</div>
+</div>
+<!-- Hanja Card 3 -->
+<div class="bg-white/60 border-l-4 border-l-[#8B5A2B] border-r border-t border-b border-[#D4B896] p-6 flex gap-6 items-start">
+<div class="flex flex-col items-center shrink-0">
+<span class="text-4xl font-serif text-[#2C1A0E] mb-1">俊</span>
+<span class="text-sm font-bold text-[#8B5A2B]">준</span>
+</div>
+<div class="space-y-2">
+<h4 class="font-bold text-lg text-[#3D2B1F]">준걸 준</h4>
+<p class="text-sm text-[#3D2B1F]/80 leading-relaxed">
+                            재주가 뛰어나고 풍채가 당당한 인재를 의미합니다. 스스로를 갈고 닦아 무리 중에서 빛을 발하는 지도자의 기운입니다.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: 사주 사반 -->
+<section class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="w-1 h-6 bg-[#C4973A]"></span>
+<h3 class="text-xl font-bold text-[#2C1A0E]">사주 사반</h3>
+</div>
+<div class="overflow-hidden border border-[#D4B896] rounded-sm shadow-sm">
+<table class="w-full text-center bg-[#FAF5EA] border-collapse">
+<thead>
+<tr class="bg-[#3D2B1F] text-[#F5EDD8]">
+<th class="py-3 font-medium border border-[#3D2B1F]/10">시(時)</th>
+<th class="py-3 font-medium border border-[#3D2B1F]/10">일(日)</th>
+<th class="py-3 font-medium border border-[#3D2B1F]/10">월(月)</th>
+<th class="py-3 font-medium border border-[#3D2B1F]/10">년(年)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="text-2xl font-serif">
+<td class="py-6 border border-[#D4B896] text-[#D32F2F]">庚</td>
+<td class="py-6 border border-[#D4B896] text-[#D32F2F]">丁</td>
+<td class="py-6 border border-[#D4B896] text-[#2E7D32]">甲</td>
+<td class="py-6 border border-[#D4B896] text-[#1976D2]">壬</td>
+</tr>
+<tr class="text-2xl font-serif bg-white/30">
+<td class="py-6 border border-[#D4B896] text-[#FBC02D]">辰</td>
+<td class="py-6 border border-[#D4B896] text-[#2E7D32]">卯</td>
+<td class="py-6 border border-[#D4B896] text-[#1976D2]">子</td>
+<td class="py-6 border border-[#D4B896] text-[#D32F2F]">午</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Section 4: 이름과 사주의 인연 -->
+<section class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="w-1 h-6 bg-[#C4973A]"></span>
+<h3 class="text-xl font-bold text-[#2C1A0E]">이름과 사주의 인연</h3>
+</div>
+<div class="border-l-4 border-l-[#C4973A] pl-6 space-y-4">
+<p class="text-[#3D2B1F] leading-loose">
+                    사주에 부족한 목(木)의 기운을 이름의 '민(敏)' 자가 가진 지혜와 유연함으로 보완하고 있습니다. 타고난 사주가 강직한 금(金)의 기질을 가지고 있으나, 이름이 이를 부드럽게 감싸주어 대인관계에서의 원만함을 더해줍니다.
+                </p>
+<p class="text-[#3D2B1F] leading-loose">
+                    특히 중년 이후로 갈수록 이름의 덕을 보게 되어, 자신의 노력이 외부의 도움과 맞물려 큰 성취를 이룰 수 있는 조화로운 형국입니다. 타고난 운명을 이름이 더 밝게 비춰주고 있습니다.
+                </p>
+</div>
+</section>
+<!-- Section 5: 종합 운세 -->
+<section class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="w-1 h-6 bg-[#C4973A]"></span>
+<h3 class="text-xl font-bold text-[#2C1A0E]">종합 운세</h3>
+</div>
+<div class="bg-gradient-to-br from-white to-[#FAF5EA] border border-[#D4B896] p-8 shadow-md space-y-6 relative">
+<div class="flex gap-3">
+<span class="px-4 py-1 border border-[#C4973A] text-[#8B5A2B] text-xs font-bold rounded-full bg-white">성장</span>
+<span class="px-4 py-1 border border-[#C4973A] text-[#8B5A2B] text-xs font-bold rounded-full bg-white">인내</span>
+<span class="px-4 py-1 border border-[#C4973A] text-[#8B5A2B] text-xs font-bold rounded-full bg-white">도약</span>
+</div>
+<p class="text-lg font-medium text-[#2C1A0E] leading-relaxed">
+                    지난날의 인내가 밑거름이 되어, 올해는 마침내 그 싹이 하늘을 향해 뻗어가는 도약의 시기입니다. 
+                    스스로를 믿고 정진한다면 반드시 귀한 인연과 기회를 마주하게 될 것입니다.
+                </p>
+</div>
+</section>
+<!-- Section 6: Quote -->
+<section class="py-12 text-center space-y-6">
+<div class="flex justify-center opacity-30">
+<span class="material-symbols-outlined text-5xl" data-icon="temp_preferences_custom">temp_preferences_custom</span>
+</div>
+<blockquote class="text-2xl font-serif font-black text-[#3D2B1F] leading-snug px-6">
+                "나무가 하늘을 향해 자라듯,<br/>올해는 당신의 해입니다."
+            </blockquote>
+</section>
+<!-- Action Buttons -->
+<section class="space-y-4 pt-8">
+<button class="w-full h-16 border-2 border-[#8B5A2B] text-[#8B5A2B] font-bold text-lg hover:bg-[#8B5A2B] hover:text-[#F5EDD8] transition-all duration-300 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+                결과 공유하기
+            </button>
+<button class="w-full h-16 bg-[#3D2B1F] text-[#C4973A] font-bold text-lg hover:bg-[#2C1A0E] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg">
+                나도 내 이름의 기운을 알고 싶다
+                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 pb-safe px-2 bg-[#F5EDD8] dark:bg-[#2C1A0E] border-t border-[#D4B896] dark:border-[#8B5A2B] shadow-inner dark:shadow-none">
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-[#9C8B7A] hover:text-[#3D2B1F] dark:hover:text-[#EDE0C4] transition-transform duration-200 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-serif text-xs font-medium">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#8B5A2B] dark:text-[#C4973A] font-bold transition-transform duration-200 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="description" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-serif text-xs font-medium">감명결과</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-[#9C8B7A] hover:text-[#3D2B1F] dark:hover:text-[#EDE0C4] transition-transform duration-200 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-serif text-xs font-medium">사주</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9C8B7A] dark:text-[#9C8B7A] hover:text-[#3D2B1F] dark:hover:text-[#EDE0C4] transition-transform duration-200 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-serif text-xs font-medium">내 정보</span>
+</a>
+</nav>
+</body></html>

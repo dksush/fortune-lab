@@ -16,6 +16,7 @@ function SuccessContent() {
     const amount = params.get('amount')
     const inputName = params.get('inputName')
     const hanjaIds = params.get('hanjaIds')?.split(',').filter(Boolean) ?? []
+    const birthDate = params.get('birthDate') ?? ''
 
     if (!paymentKey || !orderId || !amount) return
 
@@ -28,6 +29,7 @@ function SuccessContent() {
         inputName: inputName ?? '',
         hanjaIds,
         readingRaw: inputName ?? '',
+        birthDate,
       }),
     })
       .then(r => r.json())

@@ -8,13 +8,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Not available in production' }, { status: 403 })
   }
 
-  const { inputName, hanjaIds = [], readingRaw = '', extraHanja = [], allSelectedHanja = [] } = await req.json()
+  const { inputName, hanjaIds = [], readingRaw = '', extraHanja = [], allSelectedHanja = [], birthDate = '' } = await req.json()
 
   if (!inputName?.trim()) {
     return NextResponse.json({ error: 'inputName required' }, { status: 400 })
   }
 
   const supabase = createServiceClient()
+
+  // 같은 이름으로 완료된 dev 레코드가 있으면 재사용
+  const { data: existing } = await supabase
+    .from('fortunes')
+    .select('id')
+    .eq('input_name', inputName)
+    .eq('payment_key', 'dev_bypass')
+    .eq('status', 'completed')
+    .order('paid_at', { ascending: false })
+    .limit(1)
+    .single()
+
+  if (existing) {
+    return NextResponse.json({ uuid: existing.id, reused: true })
+  }
 
   const { data: fortune, error } = await supabase
     .from('fortunes')
@@ -23,6 +38,7 @@ export async function POST(req: NextRequest) {
       hanja_ids: hanjaIds,
       reading_raw: readingRaw || inputName,
       extra_hanja: allSelectedHanja,
+      birth_date: birthDate,
       status: 'pending',
       payment_key: 'dev_bypass',
       order_id: `dev_${Date.now()}`,
@@ -36,7 +52,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await generateFortune({ inputName, hanjaIds, readingRaw, supabase, extraHanja })
+    const result = await generateFortune({ inputName, hanjaIds, readingRaw, supabase, extraHanja, birthDate })
     await supabase.from('fortunes').update({ result, status: 'completed' }).eq('id', fortune.id)
     return NextResponse.json({ uuid: fortune.id })
   } catch (e: any) {
