@@ -3,7 +3,10 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import { ShareActions } from '@/components/share/ShareActions'
+import { LifeDirectionTabs } from '@/components/result/LifeDirectionTabs'
 import { FortuneResult } from '@/lib/fortune'
+import { calculateSaju, getElementFromReading, GANJIBRANCH } from '@/lib/saju'
+import type { Gender } from '@gracefullight/saju'
 
 interface Props {
   params: Promise<{ uuid: string }>
@@ -21,34 +24,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const ELEMENT_STYLE: Record<string, { label: string; circle: string; border: string }> = {
-  '木': { label: '목', circle: '#4A7C59', border: '#52B788' },
-  '火': { label: '화', circle: '#B23A3A', border: '#E06C4B' },
-  '土': { label: '토', circle: '#C4973A', border: '#D4AC0D' },
-  '金': { label: '금', circle: '#9C8B7A', border: '#9E9E9E' },
-  '水': { label: '수', circle: '#3D5A80', border: '#4A90D9' },
+// ─── 스타일 상수 ────────────────────────────────────────────────────────────
+
+const ELEMENT_COLOR: Record<string, { bg: string; text: string; border: string }> = {
+  木: { bg: '#4CAF50', text: '#fff', border: '#2E7D32' },
+  火: { bg: '#EF5350', text: '#fff', border: '#B71C1C' },
+  土: { bg: '#FF9800', text: '#fff', border: '#E65100' },
+  金: { bg: '#9E9E9E', text: '#fff', border: '#424242' },
+  水: { bg: '#2196F3', text: '#fff', border: '#0D47A1' },
 }
 
-function readingToElement(reading: string): string {
-  if (!reading) return '木'
-  const code = reading.charCodeAt(0)
-  if (code < 0xac00 || code > 0xd7a3) return '木'
-  const idx = Math.floor((code - 0xac00) / (21 * 28))
-  const map: Record<number, string> = {
-    0: '木', 1: '木', 15: '木',
-    2: '火', 3: '火', 4: '火', 5: '火', 16: '火',
-    6: '土', 7: '土', 8: '土', 17: '土',
-    9: '金', 10: '金', 12: '金', 13: '金', 14: '金',
-    11: '水', 18: '水',
-  }
-  return map[idx] ?? '木'
+const ELEMENT_LABEL: Record<string, string> = {
+  木: '목(木)', 火: '화(火)', 土: '토(土)', 金: '금(金)', 水: '수(水)',
 }
 
-function SectionHeader({ title }: { title: string }) {
+// ─── 헬퍼 컴포넌트 ──────────────────────────────────────────────────────────
+
+function Divider() {
+  return <div className="h-px bg-gradient-to-r from-transparent via-[#C4973A] to-transparent" />
+}
+
+function SectionHeader({ title, sub }: { title: string; sub?: string }) {
   return (
-    <div className="flex items-center gap-3 mb-6">
+    <div className="flex items-center gap-3 mb-5">
       <span className="w-1.5 h-6 bg-[#C4973A] shrink-0" />
-      <h2 className="text-xl font-bold text-[#2C1A0E]">{title}</h2>
+      <h2 className="text-xl font-bold text-[#2C1A0E]">
+        {title}
+        {sub && <span className="text-xs font-normal text-[#8B7355] ml-2">{sub}</span>}
+      </h2>
     </div>
   )
 }
@@ -70,6 +73,8 @@ function SubSection({ label, children }: { label: string; children: React.ReactN
   )
 }
 
+// ─── 메인 페이지 ────────────────────────────────────────────────────────────
+
 export default async function ResultPage({ params }: Props) {
   const { uuid } = await params
   const supabase = createServiceClient()
@@ -82,6 +87,7 @@ export default async function ResultPage({ params }: Props) {
 
   if (!fortune) notFound()
 
+  // 한자 데이터 로드
   type HanjaDisplay = { pos: number; character: string; reading: string; meaning: string }
   let hanjaData: HanjaDisplay[] = []
 
@@ -102,18 +108,28 @@ export default async function ResultPage({ params }: Props) {
     }
   }
 
+  // AI 결과 파싱
   let fortuneResult: FortuneResult | null = null
   if (fortune.result) {
-    try {
-      fortuneResult = JSON.parse(fortune.result) as FortuneResult
-    } catch {
-      // 구형 포맷 — fallback
-    }
+    try { fortuneResult = JSON.parse(fortune.result) as FortuneResult } catch { /* fallback */ }
   }
 
-  const syllables = fortune.input_name.split('')
-  const elementSet = new Set(hanjaData.map(h => readingToElement(h.reading)))
+  // 사주 계산 (성별 반영)
+  const sajuGender: Gender = fortune.gender === 'female' ? 'female' : 'male'
+  const saju = fortune.birth_date
+    ? await calculateSaju(fortune.birth_date, sajuGender).catch(() => null)
+    : null
 
+  // 이름 오행
+  const nameOhaeng = hanjaData.map(h => ({
+    character: h.character,
+    reading: h.reading,
+    element: getElementFromReading(h.reading),
+  }))
+
+  const syllables = fortune.input_name.split('')
+
+  // AI hanja narrative 매핑
   const narrativeMap: Record<number, string> = {}
   if (fortuneResult?.hanja) {
     fortuneResult.hanja.forEach((h, i) => {
@@ -122,14 +138,40 @@ export default async function ResultPage({ params }: Props) {
     })
   }
 
+  // 현재 대운 인덱스 계산
+  const birthYear = fortune.birth_date ? parseInt(fortune.birth_date.split('.')[0]) : 0
+  const currentAge = birthYear ? new Date().getFullYear() - birthYear : -1
+  const currentCycleIndex = saju
+    ? saju.daeun.cycles.findIndex(c => currentAge >= c.startAge && currentAge <= c.endAge)
+    : -1
+
+  // daeun_commentary 매핑 (pillar 기준)
+  const daeunCommentaryMap: Record<string, string> = {}
+  if (fortuneResult?.daeun_commentary) {
+    fortuneResult.daeun_commentary.forEach(d => {
+      daeunCommentaryMap[d.pillar] = d.brief
+    })
+  }
+
+  const pillarsArr = saju ? [
+    { label: '년주', info: saju.pillars.year },
+    { label: '월주', info: saju.pillars.month },
+    { label: '일주', info: saju.pillars.day },
+    ...(saju.pillars.hour ? [{ label: '시주', info: saju.pillars.hour }] : []),
+  ] : []
+
+  const currentYear = new Date().getFullYear()
+
   return (
     <main className="min-h-screen bg-[#F5EDD8]">
       <div className="max-w-[480px] mx-auto px-6 pt-10 pb-20 space-y-12">
 
-        {/* 헤더 */}
-        <section className="text-center">
-          <div className="inline-block border border-[#D4B896] p-1">
-            <div className="border border-[#D4B896] px-8 py-10 bg-[#FAF5EA]">
+        {/* ── Zone 1: 정체성 훅 ────────────────────────────────────── */}
+        <section className="text-center space-y-6">
+
+          {/* 이름 헤더 */}
+          <div className="inline-block border border-[#D4B896] p-1 w-full">
+            <div className="border border-[#D4B896] px-6 py-8 bg-[#FAF5EA]">
               {fortune.birth_date && (
                 <p className="text-xs text-[#9C8B7A] mb-3 tracking-widest">{fortune.birth_date} 生</p>
               )}
@@ -143,42 +185,134 @@ export default async function ResultPage({ params }: Props) {
               )}
             </div>
           </div>
+
+          {/* 키워드 (상단 배치) */}
+          {fortuneResult?.keywords && fortuneResult.keywords.length > 0 && (
+            <div className="flex justify-center gap-2 flex-wrap">
+              {fortuneResult.keywords.map((kw, i) => (
+                <span key={i} className="px-4 py-1 border border-[#D4B896] text-xs font-bold text-[#8B5A2B] bg-[#FAF5EA]">
+                  #{kw}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Quote (상단 배치 - 정체성 훅) */}
+          {fortuneResult?.quote && (
+            <div className="border-l-4 border-[#C4973A] pl-5 py-3 text-left bg-[#FAF5EA] border border-[#D4B896]">
+              <p className="text-[#C4973A] text-xs tracking-widest mb-2">✦ 이름이 전하는 한 마디</p>
+              <p className="italic text-[#3D2B1F] text-base leading-relaxed font-medium">"{fortuneResult.quote}"</p>
+            </div>
+          )}
         </section>
 
-        <div className="h-px bg-gradient-to-r from-transparent via-[#C4973A] to-transparent" />
+        <Divider />
 
-        {/* 이름의 기운 (오행) */}
-        {elementSet.size > 0 && (
-          <section>
-            <SectionHeader title="이름의 기운" />
-            <Card>
-              <div className="flex justify-between items-center max-w-xs mx-auto">
-                {['木', '火', '土', '金', '水'].map(el => {
-                  const active = elementSet.has(el)
-                  const s = ELEMENT_STYLE[el]
-                  return (
-                    <div key={el} className="flex flex-col items-center gap-2">
-                      <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${active ? 'shadow-md' : 'opacity-25'}`}
-                        style={{ backgroundColor: active ? s.circle : '#B0A090', ...(active ? { outline: `2px solid ${s.border}`, outlineOffset: '2px' } : {}) }}
-                      >
-                        {el}
-                      </div>
-                      <span className={`text-xs font-medium ${active ? 'text-[#3D2B1F]' : 'text-[#B0A090]'}`}>{s.label}</span>
-                    </div>
-                  )
-                })}
+        {/* ── Zone 2: 신뢰 데이터 ──────────────────────────────────── */}
+        {saju && (
+          <section className="space-y-6">
+
+            {/* 사주 팔자 테이블 */}
+            <div>
+              <SectionHeader title="사주 팔자" />
+              <div className="border border-[#C4A882] overflow-hidden">
+                <table className="w-full text-center text-sm">
+                  <thead>
+                    <tr className="bg-[#3D2B1F] text-[#FAF5EA]">
+                      {pillarsArr.map(p => (
+                        <th key={p.label} className="py-2 px-1 font-medium tracking-wider text-xs">{p.label}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="bg-[#FAF5EA] border-b border-[#D4B896]">
+                      {pillarsArr.map(p => (
+                        <td key={p.label + 'g'} className="py-3 text-xl font-bold text-[#2C1A0E]">{p.info.gan}</td>
+                      ))}
+                    </tr>
+                    <tr className="bg-[#FAF5EA]">
+                      {pillarsArr.map(p => (
+                        <td key={p.label + 'j'} className="py-3 text-xl font-bold text-[#8B5A2B]">{p.info.ji}</td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="flex border-t border-[#D4B896]">
+                  <div className="flex-1 py-2 text-center text-xs text-[#8B7355] border-r border-[#D4B896]">천간</div>
+                  <div className="flex-1 py-2 text-center text-xs text-[#8B7355]">지지</div>
+                </div>
               </div>
-              {fortuneResult?.element_summary && (
-                <p className="mt-6 text-sm text-[#3D2B1F] leading-relaxed text-center italic">
-                  "{fortuneResult.element_summary}"
-                </p>
-              )}
-            </Card>
+              <div className="flex justify-between mt-2 px-1">
+                <span className="text-xs text-[#8B7355]">일간 <span className="font-bold text-[#3D2B1F]">{saju.dayMaster}</span></span>
+                <span className="text-xs text-[#8B7355]">신강/신약 <span className="font-bold text-[#3D2B1F]">{saju.strengthLabel}</span></span>
+                <span className="text-xs text-[#8B7355]">용신 <span className="font-bold text-[#3D2B1F]">{saju.yongsinLabel}</span></span>
+              </div>
+            </div>
+
+            {/* 오행 분포 (사주 기준) */}
+            <div>
+              <SectionHeader title="오행 분포" />
+              <Card>
+                <div className="flex justify-around mb-4">
+                  {Object.entries(saju.elements).map(([el, cnt]) => {
+                    const c = ELEMENT_COLOR[el] ?? { bg: '#999', text: '#fff', border: '#666' }
+                    return (
+                      <div key={el} className="flex flex-col items-center gap-1.5">
+                        <div
+                          className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold border-2"
+                          style={{
+                            backgroundColor: cnt > 0 ? c.bg : 'transparent',
+                            color: cnt > 0 ? c.text : c.bg,
+                            borderColor: c.border,
+                            opacity: cnt === 0 ? 0.3 : 1,
+                          }}
+                        >
+                          {el}
+                        </div>
+                        <span className="text-xs text-[#8B7355]">{cnt}개</span>
+                      </div>
+                    )
+                  })}
+                </div>
+                {fortuneResult?.element_summary && (
+                  <p className="text-sm text-[#3D2B1F] leading-relaxed text-center italic border-t border-[#D4B896] pt-4">
+                    "{fortuneResult.element_summary}"
+                  </p>
+                )}
+              </Card>
+            </div>
+
+            {/* 이름의 오행 */}
+            {nameOhaeng.length > 0 && (
+              <div>
+                <SectionHeader title="이름의 오행" />
+                <Card>
+                  <div className="flex gap-3 justify-center">
+                    {nameOhaeng.map((h, i) => {
+                      const c = ELEMENT_COLOR[h.element] ?? { bg: '#999', text: '#fff', border: '#666' }
+                      return (
+                        <div key={i} className="flex flex-col items-center gap-2 flex-1">
+                          <div className="text-3xl font-bold text-[#2C1A0E]">{h.character}</div>
+                          <div className="text-xs text-[#8B7355]">{h.reading}</div>
+                          <div
+                            className="px-2 py-0.5 rounded-full text-xs font-medium"
+                            style={{ backgroundColor: c.bg, color: c.text }}
+                          >
+                            {ELEMENT_LABEL[h.element]}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </Card>
+              </div>
+            )}
           </section>
         )}
 
-        {/* 이름 뜻풀이 */}
+        <Divider />
+
+        {/* ── Zone 3: 이름 뜻풀이 ──────────────────────────────────── */}
         {hanjaData.length > 0 && (
           <section>
             <SectionHeader title="이름 뜻풀이" />
@@ -198,82 +332,112 @@ export default async function ResultPage({ params }: Props) {
                 </div>
               ))}
             </div>
+
+            {/* 종합 기운 */}
+            {fortuneResult?.combined && (
+              <div className="mt-6 border-l-2 border-[#C4973A] pl-6 py-2">
+                <p className="text-xs font-bold text-[#C4973A] tracking-widest mb-2">✦ 이름의 종합 기운</p>
+                <p className="text-sm leading-loose text-[#3D2B1F]">{fortuneResult.combined}</p>
+              </div>
+            )}
           </section>
         )}
 
-        {/* 이름의 종합 기운 */}
-        {fortuneResult?.combined && (
-          <section>
-            <SectionHeader title="이름의 종합 기운" />
-            <div className="border-l-2 border-[#C4973A] pl-6 py-2">
-              <p className="text-sm leading-loose text-[#3D2B1F]">{fortuneResult.combined}</p>
-            </div>
-          </section>
-        )}
-
-        {/* 이름과 사주 */}
+        {/* ── Zone 4: 이름 × 사주 (시각적 강조) ───────────────────── */}
         {fortuneResult?.saju && (
-          <section>
-            <SectionHeader title="이름과 사주" />
-            <div className="space-y-4">
-              <Card>
-                <SubSection label="타고난 기운">
-                  {fortuneResult.saju.innate}
-                </SubSection>
-              </Card>
-              <Card>
-                <SubSection label="이름과 사주의 조화">
-                  {fortuneResult.saju.harmony}
-                </SubSection>
-              </Card>
-              <Card>
-                <SubSection label={`${new Date().getFullYear()}년 올해의 운세`}>
-                  {fortuneResult.saju.this_year}
-                </SubSection>
-              </Card>
+          <section className="-mx-6">
+            <div className="bg-[#2C1A0E] px-6 py-10 space-y-1">
+              <div className="flex items-center gap-3 mb-7">
+                <span className="w-1.5 h-6 bg-[#C4973A] shrink-0" />
+                <h2 className="text-xl font-bold text-[#FAF5EA]">이름과 사주</h2>
+              </div>
+
+              <div className="space-y-5">
+                <div className="border border-[#5A3E28] p-5 space-y-2">
+                  <p className="text-xs font-bold text-[#C4973A] tracking-widest">✦ 타고난 기운</p>
+                  <p className="text-sm leading-loose text-[#E8D9C0]">{fortuneResult.saju.innate}</p>
+                </div>
+
+                <div className="border-2 border-[#C4973A] p-5 space-y-2">
+                  <p className="text-xs font-bold text-[#C4973A] tracking-widest">✦ 이름과 사주의 조화</p>
+                  <p className="text-sm leading-loose text-[#E8D9C0]">{fortuneResult.saju.harmony}</p>
+                </div>
+
+                <div className="border border-[#5A3E28] p-5 space-y-2">
+                  <p className="text-xs font-bold text-[#C4973A] tracking-widest">✦ {currentYear}년 올해의 운세</p>
+                  <p className="text-sm leading-loose text-[#E8D9C0]">{fortuneResult.saju.this_year}</p>
+                </div>
+              </div>
             </div>
           </section>
         )}
 
-        {/* 인생의 방향 */}
+        {/* ── Zone 5: 인생의 방향 (탭) ─────────────────────────────── */}
         {fortuneResult?.life_direction && (
           <section>
             <SectionHeader title="인생의 방향" />
-            <Card>
-              <div className="space-y-5">
-                <SubSection label="재능과 적성">
-                  {fortuneResult.life_direction.talent}
-                </SubSection>
-                <div className="h-px bg-[#D4B896]" />
-                <SubSection label="재물과 직업">
-                  {fortuneResult.life_direction.wealth}
-                </SubSection>
-                <div className="h-px bg-[#D4B896]" />
-                <SubSection label="인간관계">
-                  {fortuneResult.life_direction.relationships}
-                </SubSection>
-              </div>
-            </Card>
+            <LifeDirectionTabs data={fortuneResult.life_direction} />
           </section>
         )}
 
-        {/* 총평 */}
-        {fortuneResult && (
-          <section className="text-center">
-            {fortuneResult.keywords?.length > 0 && (
-              <div className="flex justify-center gap-2 flex-wrap mb-8">
-                {fortuneResult.keywords.map((kw, i) => (
-                  <span key={i} className="px-4 py-1 border border-[#D4B896] text-xs font-bold text-[#8B5A2B]">#{kw}</span>
-                ))}
-              </div>
-            )}
-            <div className="py-10 px-6 bg-[#FAF5EA] border-y border-[#D4B896]">
-              {fortuneResult.overall && (
-                <p className="text-base font-bold text-[#2C1A0E] mb-6 leading-relaxed">{fortuneResult.overall}</p>
-              )}
-              {fortuneResult.quote && (
-                <p className="italic text-[#8B5A2B] text-sm">'{fortuneResult.quote}'</p>
-              )}
+        {/* ── Zone 6: 총평 ──────────────────────────────────────────── */}
+        {fortuneResult?.overall && (
+          <section>
+            <SectionHeader title="총평" />
+            <div className="py-8 px-6 bg-[#FAF5EA] border-y border-[#D4B896] text-center">
+              <p className="text-base font-bold text-[#2C1A0E] leading-relaxed">{fortuneResult.overall}</p>
+            </div>
+          </section>
+        )}
+
+        {/* ── Zone 7: 대운표 ────────────────────────────────────────── */}
+        {saju && saju.daeun.cycles.length > 0 && (
+          <section>
+            <SectionHeader title="대운표" sub={`(${saju.daeun.startAge}세부터 10년 주기)`} />
+            <div className="space-y-3">
+              {saju.daeun.cycles.slice(0, 6).map((c, i) => {
+                const isCurrent = i === currentCycleIndex
+                const ganInfo = GANJIBRANCH[c.gan]
+                const jiInfo = GANJIBRANCH[c.ji]
+                const commentary = daeunCommentaryMap[c.pillar]
+                  ?? daeunCommentaryMap[c.gan + c.ji]
+                  ?? fortuneResult?.daeun_commentary?.[i]?.brief
+
+                return (
+                  <div
+                    key={i}
+                    className={`border p-4 ${
+                      isCurrent
+                        ? 'border-[#C4973A] bg-[#FFF9ED]'
+                        : 'border-[#D4B896] bg-[#FAF5EA]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4 mb-2">
+                      {/* 나이 */}
+                      <span className={`text-xs font-medium shrink-0 ${isCurrent ? 'text-[#C4973A]' : 'text-[#8B7355]'}`}>
+                        {c.startAge}~{c.endAge}세
+                        {isCurrent && <span className="ml-1 text-[10px] bg-[#C4973A] text-white px-1.5 py-0.5 rounded-full">현재</span>}
+                      </span>
+                      {/* 천간 */}
+                      <div className="text-center">
+                        <span className="text-xl font-bold text-[#2C1A0E]">{c.gan}</span>
+                        {ganInfo && <span className="block text-[10px] text-[#8B7355]">{ganInfo.nature}</span>}
+                      </div>
+                      {/* 지지 */}
+                      <div className="text-center">
+                        <span className="text-xl font-bold text-[#8B5A2B]">{c.ji}</span>
+                        {jiInfo && <span className="block text-[10px] text-[#8B7355]">{jiInfo.element}·{jiInfo.nature}</span>}
+                      </div>
+                    </div>
+                    {/* AI 해설 */}
+                    {commentary && (
+                      <p className={`text-sm leading-relaxed ${isCurrent ? 'text-[#3D2B1F]' : 'text-[#5A4030]'}`}>
+                        {commentary}
+                      </p>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </section>
         )}
@@ -285,8 +449,9 @@ export default async function ResultPage({ params }: Props) {
           </section>
         )}
 
-        <div className="h-px bg-gradient-to-r from-transparent via-[#C4973A] to-transparent" />
+        <Divider />
 
+        {/* ── Zone 8: 공유 + CTA ────────────────────────────────────── */}
         <div className="space-y-3">
           <p className="text-center text-[#8B7355] text-xs tracking-wide">이 풀이를 친구에게 공유해보세요</p>
           <ShareActions uuid={uuid} inputName={fortune.input_name} />

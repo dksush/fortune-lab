@@ -44,12 +44,8 @@ export interface NameReadingCharacter {
 
 export interface NameReadingResult {
   characters: NameReadingCharacter[]
-  name_meaning: string       // 이름 한자의 종합적 의미
-  saju_elements: {
-    year?: { stem: string; branch: string; stemKr: string; branchKr: string }
-    month?: { stem: string; branch: string; stemKr: string; branchKr: string }
-    day?: { stem: string; branch: string; stemKr: string; branchKr: string }
-  } | null
-  combined_reading: string   // 이름 + 사주 연계 해석
-  fortune_summary: string    // 운세 요약
+  name_meaning: string
+  saju_elements: import('@/lib/saju').SajuData | null
+  combined_reading: string
+  fortune_summary: string
 }

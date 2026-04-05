@@ -17,6 +17,12 @@ function SuccessContent() {
     const inputName = params.get('inputName')
     const hanjaIds = params.get('hanjaIds')?.split(',').filter(Boolean) ?? []
     const birthDate = params.get('birthDate') ?? ''
+    const extraEncoded = params.get('extra') ?? ''
+    const gender = params.get('gender') ?? 'male'
+    let extraHanja: { character: string; reading: string; meaning: string }[] = []
+    try {
+      if (extraEncoded) extraHanja = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(extraEncoded)))))
+    } catch { /* ignore */ }
 
     if (!paymentKey || !orderId || !amount) return
 
@@ -30,6 +36,8 @@ function SuccessContent() {
         hanjaIds,
         readingRaw: inputName ?? '',
         birthDate,
+        extraHanja,
+        gender,
       }),
     })
       .then(r => r.json())

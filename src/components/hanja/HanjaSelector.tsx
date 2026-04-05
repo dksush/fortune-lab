@@ -15,11 +15,12 @@ interface Props {
   onUpdate: (id: string, patch: Partial<NameRow>) => void
   onAddRow: () => void
   onRemoveRow: (id: string) => void
+  labels?: string[]
 }
 
 const DEBOUNCE_MS = 500
 
-export function HanjaSelector({ rows, onUpdate, onAddRow, onRemoveRow }: Props) {
+export function HanjaSelector({ rows, onUpdate, onAddRow, onRemoveRow, labels }: Props) {
   // 상태 키: 숫자 인덱스 대신 row.id 사용 → 삭제/추가 시 오동작 없음
   const [results, setResults] = useState<Record<string, Hanja[]>>({})
   const [loading, setLoading] = useState<Record<string, boolean>>({})
@@ -117,8 +118,10 @@ export function HanjaSelector({ rows, onUpdate, onAddRow, onRemoveRow }: Props) 
           <div key={id} className="space-y-2">
             {/* 입력 행 */}
             <div className="flex items-center gap-2">
-              {/* 순번 */}
-              <span className="text-[#B0A090] text-xs w-4 shrink-0 text-center">{idx + 1}</span>
+              {/* 레이블 */}
+              <span className="text-[#8B5A2B] text-xs w-8 shrink-0 text-center font-medium">
+                {labels?.[idx] ?? String(idx + 1)}
+              </span>
 
               {/* 검색 인풋 */}
               <input

@@ -37,7 +37,7 @@ export async function generateNameReading({
   })
 
   // 2. 사주 계산 (birthdate 있을 때만)
-  const sajuResult = birthdate ? calculateSaju(birthdate) : null
+  const sajuData = birthdate ? await calculateSaju(birthdate).catch(() => null) : null
 
   // 3. 컨텍스트 구성
   const nameDisplay = characters
@@ -46,11 +46,12 @@ export async function generateNameReading({
 
   let context = `이름 한자: ${nameDisplay}\n`
 
-  if (sajuResult) {
+  if (sajuData) {
     context += `사주 정보:\n`
-    context += `- 년주: ${sajuResult.year.stem}${sajuResult.year.branch} (${sajuResult.year.stemKr}${sajuResult.year.branchKr})\n`
-    context += `- 월주: ${sajuResult.month.stem}${sajuResult.month.branch} (${sajuResult.month.stemKr}${sajuResult.month.branchKr})\n`
-    context += `- 일주: ${sajuResult.day.stem}${sajuResult.day.branch} (${sajuResult.day.stemKr}${sajuResult.day.branchKr})\n`
+    context += `- 년주: ${sajuData.pillars.year.full}\n`
+    context += `- 월주: ${sajuData.pillars.month.full}\n`
+    context += `- 일주: ${sajuData.pillars.day.full}\n`
+    context += `- 용신: ${sajuData.yongsinLabel}, 기신: ${sajuData.gisinLabel}\n`
   }
 
   // 4. Claude API 호출 (tool_use로 구조화된 JSON 반환 강제)
@@ -111,7 +112,7 @@ ${context}
   return {
     characters,
     name_meaning: aiResult.name_meaning,
-    saju_elements: sajuResult,
+    saju_elements: sajuData,
     combined_reading: aiResult.combined_reading,
     fortune_summary: aiResult.fortune_summary,
   }

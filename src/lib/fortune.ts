@@ -1,5 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { SupabaseClient } from '@supabase/supabase-js'
+import { calculateSaju } from './saju'
+import type { Gender } from '@gracefullight/saju'
 
 const client = new Anthropic()
 
@@ -7,6 +9,12 @@ export interface ExtraHanja {
   character: string
   reading: string
   meaning: string
+}
+
+export interface DaeunCommentary {
+  pillar: string
+  age_range: string
+  brief: string
 }
 
 export interface FortuneResult {
@@ -30,6 +38,7 @@ export interface FortuneResult {
   keywords: string[]
   overall: string
   quote: string
+  daeun_commentary?: DaeunCommentary[]
 }
 
 interface GenerateFortuneParams {
@@ -39,9 +48,10 @@ interface GenerateFortuneParams {
   supabase: SupabaseClient
   extraHanja?: ExtraHanja[]
   birthDate?: string
+  gender?: string
 }
 
-export async function generateFortune({ inputName, hanjaIds, readingRaw, supabase, extraHanja, birthDate }: GenerateFortuneParams): Promise<string> {
+export async function generateFortune({ inputName, hanjaIds, readingRaw, supabase, extraHanja, birthDate, gender }: GenerateFortuneParams): Promise<string> {
   let hanjaList: { character: string; reading: string; meaning: string }[] = []
 
   if (hanjaIds.length > 0) {
@@ -58,19 +68,44 @@ export async function generateFortune({ inputName, hanjaIds, readingRaw, supabas
 
   const hanjaDesc = hanjaList.map(h => `${h.character}(${h.meaning} ${h.reading})`).join(', ')
   const nameDisplay = hanjaDesc ? `${inputName} (${hanjaDesc})` : inputName
-  const birthInfo = birthDate ? `생년월일: ${birthDate}` : '생년월일: 미입력'
   const currentYear = new Date().getFullYear()
+
+  // 사주 계산
+  const genderKr = gender === 'female' ? '여성' : '남성'
+  const sajuGender: Gender = gender === 'female' ? 'female' : 'male'
+
+  let sajuSummary = '생년월일: 미입력'
+  let daeunCycles: { startAge: number; endAge: number; pillar: string }[] = []
+  if (birthDate) {
+    try {
+      const sajuData = await calculateSaju(birthDate, sajuGender)
+      daeunCycles = sajuData.daeun.cycles.slice(0, 6)
+      const daeunLine = daeunCycles.map(c => `${c.startAge}~${c.endAge}세(${c.pillar})`).join(', ')
+      sajuSummary = `성별: ${genderKr}\n생년월일: ${birthDate}\n${sajuData.summaryForAI}\n대운 주기: ${daeunLine}`
+    } catch {
+      sajuSummary = `성별: ${genderKr}\n생년월일: ${birthDate}`
+    }
+  }
+
+  const daeunSchema = daeunCycles.length > 0 ? `,
+  "daeun_commentary": [
+    {
+      "pillar": "천간+지지 (예: 甲子)",
+      "age_range": "시작세~끝세",
+      "brief": "이 10년 대운이 이 사람에게 가져오는 기운을 1-2문장으로. 이름 한자(${hanjaDesc})와 연결지어 서술."
+    }
+  ]` : ''
 
   const message = await client.messages.create({
     model: 'claude-opus-4-6',
-    max_tokens: 3000,
+    max_tokens: 4000,
     messages: [
       {
         role: 'user',
         content: `당신은 40년 경력의 한국 전통 철학관 선생님입니다. 진중하고 신비로운 어투로, 단순한 사전 풀이가 아닌 그 사람의 삶과 운명에 미치는 영향을 중심으로 풀어주세요.
 
 이름: ${nameDisplay}
-${birthInfo}
+${sajuSummary}
 
 아래 JSON 형식으로만 답하세요. 마크다운 코드블록 없이 순수 JSON만 출력하세요.
 
@@ -96,7 +131,7 @@ ${birthInfo}
   },
   "keywords": ["이 이름과 사주를 대표하는 키워드 3-5개"],
   "overall": "이름 전체를 아우르는 종합 총평을 3-4문장으로. 이 사람이 가진 가장 큰 강점과 인생의 방향성.",
-  "quote": "이 이름을 가진 사람에게 건네는 철학관식 한 마디. 고사성어나 자연의 이치를 빌려 표현해도 좋음."
+  "quote": "이 이름을 가진 사람에게 건네는 철학관식 한 마디. 고사성어나 자연의 이치를 빌려 표현해도 좋음."${daeunSchema}
 }`,
       },
     ],

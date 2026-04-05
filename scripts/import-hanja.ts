@@ -3,7 +3,11 @@
  * 출처: https://github.com/rutopio/Korean-Name-Hanja-Charset (MIT License)
  *
  * 사용법:
- *   npx tsx scripts/import-hanja.ts
+ *   npm run import-hanja
+ *
+ * 사전 조건:
+ *   supabase/migrations/006_gender.sql 실행 후 사용
+ *   (hanja_char_reading_idx unique index 필요)
  */
 
 import { loadEnvConfig } from '@next/env'
@@ -19,7 +23,6 @@ const supabase = createClient(
 async function main() {
   console.log('한자 데이터 다운로드 중...')
 
-  // rutopio/Korean-Name-Hanja-Charset 의 JSON 데이터 사용
   const res = await fetch(
     'https://raw.githubusercontent.com/rutopio/Korean-Name-Hanja-Charset/main/data-gov.json'
   )
@@ -29,11 +32,9 @@ async function main() {
     process.exit(1)
   }
 
-  // 실제 데이터 구조: { cd: "04f3d", ineum: "가", in: "가 : 절(가)", stroke: 0 }
   const raw: Array<{ cd: string; ineum: string; in: string; stroke: number }> = await res.json()
   console.log(`총 ${raw.length}개 항목 로드됨`)
 
-  // 중복 제거 (같은 character+reading 조합)
   const seen = new Set<string>()
   const records = raw
     .filter(item => {
@@ -44,7 +45,6 @@ async function main() {
       return true
     })
     .map(item => {
-      // "가 : 절(가)" → meaning = "절"
       const parts = item.in?.split(' : ')
       const meaning = parts?.[1]?.split('(')[0]?.trim() ?? ''
       return {
@@ -52,21 +52,35 @@ async function main() {
         reading: item.ineum,
         meaning,
         stroke: item.stroke ?? 0,
+        usage_count: 0,
       }
     })
+    .filter(r => r.character && r.reading) // 유효한 데이터만
 
   console.log(`중복 제거 후 ${records.length}개`)
 
-  // 500개씩 배치 insert
+  // 500개씩 배치 upsert (character+reading 기준 충돌 무시)
   const batchSize = 500
-  let inserted = 0
+  let upserted = 0
+  let skipped = 0
 
   for (let i = 0; i < records.length; i += batchSize) {
     const batch = records.slice(i, i + batchSize)
-    const { error } = await supabase.from('hanja').insert(batch)
-    if (error) console.error(`배치 ${i / batchSize + 1} 오류:`, error.message)
-    else inserted += batch.length
-    process.stdout.write(`\r${inserted}/${records.length} import 완료`)
+    const { error, count } = await supabase
+      .from('hanja')
+      .upsert(batch, {
+        onConflict: 'character,reading',
+        ignoreDuplicates: true,
+        count: 'exact',
+      })
+
+    if (error) {
+      console.error(`\n배치 ${Math.floor(i / batchSize) + 1} 오류:`, error.message)
+      skipped += batch.length
+    } else {
+      upserted += count ?? batch.length
+    }
+    process.stdout.write(`\r처리: ${i + batch.length}/${records.length} (추가: ${upserted}, 건너뜀: ${skipped})`)
   }
 
   console.log('\n✓ 한자 데이터 import 완료')
