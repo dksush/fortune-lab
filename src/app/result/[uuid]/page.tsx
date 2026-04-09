@@ -4,8 +4,10 @@ import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import { ShareActions } from '@/components/share/ShareActions'
 import { LifeDirectionTabs } from '@/components/result/LifeDirectionTabs'
+import { OhaengDiagram } from '@/components/result/OhaengDiagram'
 import { FortuneResult } from '@/lib/fortune'
 import { calculateSaju, getElementFromReading, GANJIBRANCH } from '@/lib/saju'
+import { calcNameScore, scoreToPercentile } from '@/lib/name-score'
 import type { Gender } from '@gracefullight/saju'
 
 interface Props {
@@ -127,6 +129,14 @@ export default async function ResultPage({ params }: Props) {
     element: getElementFromReading(h.reading),
   }))
 
+  // 이름 점수 계산
+  const nameScore = hanjaData.length > 0 && saju ? calcNameScore({
+    nameOhaeng,
+    yongsin: saju.yongsin,
+    gisin: saju.gisin,
+    meanings: hanjaData.map(h => h.meaning),
+  }) : null
+
   const syllables = fortune.input_name.split('')
 
   // AI hanja narrative 매핑
@@ -212,6 +222,59 @@ export default async function ResultPage({ params }: Props) {
         {saju && (
           <section className="space-y-6">
 
+            {/* 이름 점수 */}
+            {nameScore && (
+              <div>
+                <SectionHeader title="이름 점수" />
+                <Card>
+                  <div className="flex items-center justify-between mb-5">
+                    <div>
+                      <p className="text-5xl font-black text-[#2C1A0E]">
+                        {nameScore.total}
+                        <span className="text-xl font-medium text-[#8B7355] ml-1">점</span>
+                      </p>
+                      <p className="text-xs text-[#C4973A] font-bold mt-1">
+                        {scoreToPercentile(nameScore.total)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-[#8B7355] mb-2">100점 만점</p>
+                      {/* 점수 게이지 */}
+                      <div className="w-28 bg-[#EDE0C8] rounded-full h-2.5 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-[#C4973A]"
+                          style={{ width: `${nameScore.total}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  {/* 항목별 상세 */}
+                  <div className="space-y-3 border-t border-[#D4B896] pt-4">
+                    <p className="text-[10px] text-[#C4973A] font-bold tracking-widest">✦ 항목별 분석</p>
+                    {[
+                      { label: '용신 일치도', desc: '이름 오행이 사주 용신과 얼마나 맞는가', score: nameScore.yongsinScore, max: 40 },
+                      { label: '오행 균형',   desc: '이름 글자들의 오행이 다양하게 어우러지는가', score: nameScore.balanceScore, max: 30 },
+                      { label: '한자 뜻 긍정성', desc: '한자 의미가 긍정적이고 상서로운가', score: nameScore.meaningScore, max: 30 },
+                    ].map(({ label, desc, score, max }) => (
+                      <div key={label}>
+                        <div className="flex justify-between items-baseline mb-1">
+                          <span className="text-sm font-medium text-[#3D2B1F]">{label}</span>
+                          <span className="text-sm font-bold text-[#2C1A0E]">{score}<span className="text-[10px] text-[#8B7355] font-normal">/{max}</span></span>
+                        </div>
+                        <div className="bg-[#EDE0C8] rounded-full h-2 overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-[#C4973A]"
+                            style={{ width: `${(score / max) * 100}%` }}
+                          />
+                        </div>
+                        <p className="text-[10px] text-[#B0A090] mt-0.5">{desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </div>
+            )}
+
             {/* 사주 팔자 테이블 */}
             <div>
               <SectionHeader title="사주 팔자" />
@@ -249,45 +312,31 @@ export default async function ResultPage({ params }: Props) {
               </div>
             </div>
 
-            {/* 오행 분포 (사주 기준) */}
+            {/* 오행 분포 — SVG 다이어그램 */}
             <div>
               <SectionHeader title="오행 분포" />
               <Card>
-                <div className="flex justify-around mb-4">
-                  {Object.entries(saju.elements).map(([el, cnt]) => {
-                    const c = ELEMENT_COLOR[el] ?? { bg: '#999', text: '#fff', border: '#666' }
-                    return (
-                      <div key={el} className="flex flex-col items-center gap-1.5">
-                        <div
-                          className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold border-2"
-                          style={{
-                            backgroundColor: cnt > 0 ? c.bg : 'transparent',
-                            color: cnt > 0 ? c.text : c.bg,
-                            borderColor: c.border,
-                            opacity: cnt === 0 ? 0.3 : 1,
-                          }}
-                        >
-                          {el}
-                        </div>
-                        <span className="text-xs text-[#8B7355]">{cnt}개</span>
-                      </div>
-                    )
-                  })}
+                <OhaengDiagram elements={saju.elements} yongsin={saju.yongsin} />
+                <div className="flex justify-around mt-3 pt-3 border-t border-[#D4B896] text-xs text-[#8B7355]">
+                  <span>용신 <span className="font-bold text-[#3D2B1F]">{saju.yongsinLabel}</span></span>
+                  <span>기신 <span className="font-bold text-[#3D2B1F]">{saju.gisinLabel}</span></span>
+                  <span>신강/신약 <span className="font-bold text-[#3D2B1F]">{saju.strengthLabel}</span></span>
                 </div>
                 {fortuneResult?.element_summary && (
-                  <p className="text-sm text-[#3D2B1F] leading-relaxed text-center italic border-t border-[#D4B896] pt-4">
+                  <p className="text-sm text-[#3D2B1F] leading-relaxed text-center italic border-t border-[#D4B896] pt-4 mt-3">
                     "{fortuneResult.element_summary}"
                   </p>
                 )}
               </Card>
             </div>
 
-            {/* 이름의 오행 */}
+            {/* 이름의 오행 — 글자별 + 바 차트 */}
             {nameOhaeng.length > 0 && (
               <div>
                 <SectionHeader title="이름의 오행" />
                 <Card>
-                  <div className="flex gap-3 justify-center">
+                  {/* 글자별 오행 */}
+                  <div className="flex gap-3 justify-center mb-5">
                     {nameOhaeng.map((h, i) => {
                       const c = ELEMENT_COLOR[h.element] ?? { bg: '#999', text: '#fff', border: '#666' }
                       return (
@@ -303,6 +352,41 @@ export default async function ResultPage({ params }: Props) {
                         </div>
                       )
                     })}
+                  </div>
+                  {/* 오행 바 차트 */}
+                  <div className="border-t border-[#D4B896] pt-4 space-y-2">
+                    <p className="text-[10px] text-[#C4973A] font-bold tracking-widest mb-3">✦ 이름 오행 균형</p>
+                    {(() => {
+                      const counts: Record<string, number> = {}
+                      nameOhaeng.forEach(h => { counts[h.element] = (counts[h.element] ?? 0) + 1 })
+                      const max = Math.max(...Object.values(counts), 1)
+                      return (['木','火','土','金','水'] as const).map(el => {
+                        const cnt = counts[el] ?? 0
+                        const c = ELEMENT_COLOR[el] ?? { bg: '#999', text: '#fff', border: '#666' }
+                        const isYongsin = el === saju.yongsin
+                        return (
+                          <div key={el} className="flex items-center gap-2">
+                            <span className="text-xs w-10 text-[#8B7355] shrink-0">{ELEMENT_LABEL[el]}</span>
+                            <div className="flex-1 bg-[#EDE0C8] rounded-full h-3 overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all"
+                                style={{
+                                  width: cnt === 0 ? '0%' : `${(cnt / max) * 100}%`,
+                                  backgroundColor: c.bg,
+                                  opacity: cnt === 0 ? 0 : 1,
+                                }}
+                              />
+                            </div>
+                            <span className="text-xs w-5 text-right shrink-0" style={{ color: cnt > 0 ? c.bg : '#C4A882' }}>
+                              {cnt}
+                            </span>
+                            {isYongsin && cnt > 0 && (
+                              <span className="text-[9px] text-[#C4973A] font-bold shrink-0">용신</span>
+                            )}
+                          </div>
+                        )
+                      })
+                    })()}
                   </div>
                 </Card>
               </div>

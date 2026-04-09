@@ -1,6 +1,8 @@
 import { calculateSaju, getElementFromReading, GANJIBRANCH } from '@/lib/saju'
+import { calcNameScore, scoreToPercentile } from '@/lib/name-score'
 import type { Gender } from '@gracefullight/saju'
 import { PaymentButtonPreview } from '@/components/payment/PaymentButtonPreview'
+import { OhaengDiagram } from '@/components/result/OhaengDiagram'
 
 interface SelectedHanja {
   pos: number
@@ -58,6 +60,14 @@ export default async function PreviewPage({
     reading: h.reading,
     element: getElementFromReading(h.reading),
   }))
+
+  // 이름 점수 계산 (티저용)
+  const nameScore = allSelectedHanja.length > 0 && saju ? calcNameScore({
+    nameOhaeng,
+    yongsin: saju.yongsin,
+    gisin: saju.gisin,
+    meanings: allSelectedHanja.map(h => h.meaning),
+  }) : null
 
   const pillarsArr = saju ? [
     { label: '년주', info: saju.pillars.year },
@@ -135,30 +145,55 @@ export default async function PreviewPage({
           </section>
         )}
 
-        {/* 오행 분포 */}
+        {/* 오행 분포 — SVG 다이어그램 */}
         {saju && (
           <section>
             <SectionTitle>오행 분포</SectionTitle>
             <div className="bg-[#FAF5EA] border border-[#C4A882] rounded-xl p-4">
-              <div className="flex justify-around">
-                {elementsArr.map(({ el, cnt }) => {
-                  const c = ELEMENT_COLOR[el] ?? { bg: '#999', text: '#fff', border: '#666' }
-                  return (
-                    <div key={el} className="flex flex-col items-center gap-1.5">
-                      <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold border-2"
-                        style={{ backgroundColor: cnt > 0 ? c.bg : 'transparent', color: cnt > 0 ? c.text : c.bg, borderColor: c.border, opacity: cnt === 0 ? 0.35 : 1 }}
-                      >
-                        {el}
-                      </div>
-                      <span className="text-xs text-[#8B7355]">{cnt}개</span>
-                    </div>
-                  )
-                })}
-              </div>
+              <OhaengDiagram elements={saju.elements} yongsin={saju.yongsin} />
               <div className="mt-3 pt-3 border-t border-[#D4B896] flex justify-around text-xs text-[#8B7355]">
                 <span>용신 <span className="font-bold text-[#3D2B1F]">{saju.yongsinLabel}</span></span>
                 <span>기신 <span className="font-bold text-[#3D2B1F]">{saju.gisinLabel}</span></span>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 이름 점수 — 티저 (상세는 결제 후) */}
+        {nameScore && (
+          <section>
+            <SectionTitle>이름 점수</SectionTitle>
+            <div className="bg-[#FAF5EA] border border-[#C4A882] rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="text-4xl font-black text-[#2C1A0E]">
+                    {nameScore.total}
+                    <span className="text-lg font-medium text-[#8B7355] ml-1">점</span>
+                  </p>
+                  <p className="text-xs text-[#C4973A] font-bold mt-1">{scoreToPercentile(nameScore.total)}</p>
+                </div>
+                <div className="w-24">
+                  <div className="bg-[#EDE0C8] rounded-full h-2.5 overflow-hidden">
+                    <div className="h-full rounded-full bg-[#C4973A]" style={{ width: `${nameScore.total}%` }} />
+                  </div>
+                  <p className="text-[10px] text-[#B0A090] mt-1 text-right">100점 만점</p>
+                </div>
+              </div>
+              {/* 항목 블러 티저 */}
+              <div className="relative border-t border-[#D4B896] pt-3">
+                <div className="space-y-2 blur-sm select-none pointer-events-none" aria-hidden>
+                  {['용신 일치도', '오행 균형', '한자 뜻 긍정성'].map(label => (
+                    <div key={label} className="flex justify-between">
+                      <span className="text-xs text-[#3D2B1F]">{label}</span>
+                      <span className="text-xs font-bold text-[#2C1A0E]">??점</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <p className="text-[11px] text-[#8B5A2B] font-bold bg-[#FFF9ED] px-3 py-1 border border-[#C4973A] rounded-full">
+                    항목별 분석은 결제 후 공개
+                  </p>
+                </div>
               </div>
             </div>
           </section>
