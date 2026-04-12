@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { nanoid } from 'nanoid'
 import { createServiceClient } from '@/lib/supabase/server'
 import { generateFortune } from '@/lib/fortune'
 
@@ -18,16 +19,16 @@ export async function POST(req: NextRequest) {
   // 중복 확인 (AC-07 중복 과금 방지)
   const { data: existing } = await supabase
     .from('fortunes')
-    .select('id, status')
+    .select('id, short_id, status')
     .eq('order_id', orderId)
     .single()
 
   if (existing) {
     if (existing.status === 'completed') {
-      return NextResponse.json({ uuid: existing.id }, { status: 200 })
+      return NextResponse.json({ uuid: existing.short_id ?? existing.id }, { status: 200 })
     }
     if (existing.status === 'pending' || existing.status === 'failed') {
-      return NextResponse.json({ uuid: existing.id, status: existing.status }, { status: 200 })
+      return NextResponse.json({ uuid: existing.short_id ?? existing.id, status: existing.status }, { status: 200 })
     }
   }
 
@@ -64,8 +65,9 @@ export async function POST(req: NextRequest) {
       payment_key: paymentKey,
       order_id: orderId,
       paid_at: new Date().toISOString(),
+      short_id: nanoid(8),
     })
-    .select('id')
+    .select('id, short_id')
     .single()
 
   if (insertError || !fortune) {
@@ -80,13 +82,13 @@ export async function POST(req: NextRequest) {
       .update({ result, status: 'completed' })
       .eq('id', fortune.id)
 
-    return NextResponse.json({ uuid: fortune.id })
+    return NextResponse.json({ uuid: fortune.short_id ?? fortune.id })
   } catch {
     await supabase
       .from('fortunes')
       .update({ status: 'failed' })
       .eq('id', fortune.id)
 
-    return NextResponse.json({ uuid: fortune.id, status: 'failed' }, { status: 200 })
+    return NextResponse.json({ uuid: fortune.short_id ?? fortune.id, status: 'failed' }, { status: 200 })
   }
 }

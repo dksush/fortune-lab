@@ -62,9 +62,9 @@ export function PaymentButtonPreview({ inputName, hanjaIds, extraHanja, birthDat
     <button
       onClick={handlePay}
       disabled={loading || !inputName.trim()}
-      className="w-full py-4 bg-[#3D2B1F] hover:bg-[#2C1A0E] text-[#FAF5EA] font-bold text-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed tracking-wide"
+      className="w-full py-4 bg-[#C4973A] hover:bg-[#B8872A] text-[#2C1A0E] font-bold text-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed tracking-wide"
     >
-      {loading ? '결제창 열기…' : '✦ 전체 해석 보기 · 990원 ✦'}
+      {loading ? '결제창 열기…' : '✦ 전체 해석 열람하기 · 990원 ✦'}
     </button>
   )
 }

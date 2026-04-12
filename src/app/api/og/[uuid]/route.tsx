@@ -13,11 +13,10 @@ export async function GET(
   const { uuid } = await params
   const supabase = createServiceClient()
 
-  const { data: fortune } = await supabase
-    .from('fortunes')
-    .select('input_name, result, reading_raw')
-    .eq('id', uuid)
-    .single()
+  const isUuidFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid)
+  const { data: fortune } = await (isUuidFormat
+    ? supabase.from('fortunes').select('input_name, result, reading_raw').eq('id', uuid).single()
+    : supabase.from('fortunes').select('input_name, result, reading_raw').eq('short_id', uuid).single())
 
   const name = fortune?.input_name ?? '이름'
   const summary = fortune?.result

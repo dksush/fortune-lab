@@ -296,6 +296,14 @@ export default async function PreviewPage({
 
         {/* 결제 CTA */}
         <div className="space-y-3 pt-2 pb-6">
+          <div className="bg-[#FFF9ED] border border-[#C4973A] rounded-xl p-4 text-center space-y-1.5">
+            <p className="text-[#2C1A0E] font-bold text-base">이 이름이 내 운명에 미치는 영향</p>
+            <p className="text-[#3D2B1F] text-sm leading-relaxed">
+              한자 뜻풀이 · 이름×사주 조화 분석 · 올해 운세<br />
+              재능·재물·인간관계 방향 · 대운 10년 주기 해설
+            </p>
+            <p className="text-[#8B5A2B] text-xs">단 990원으로 전체 해석을 확인하세요</p>
+          </div>
           <PaymentButtonPreview
             inputName={inputName}
             hanjaIds={hanjaIds}
@@ -304,7 +312,7 @@ export default async function PreviewPage({
             gender={gender}
           />
           <p className="text-center text-[#B0A090] text-xs">
-            결제 후 AI가 생성한 전체 해석을 바로 확인할 수 있습니다
+            결제 완료 즉시 AI 생성 전체 해석을 확인할 수 있습니다
           </p>
         </div>
 

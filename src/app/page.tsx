@@ -18,6 +18,22 @@ const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0')
 
 const ROW_LABELS = ['성', '이름', '이름', '이름', '이름']
 
+// 12 시진 (時辰) 정의 — value는 API 전달용 시간 문자열
+const SIJIN = [
+  { label: '자시(子)', range: '00:00~01:29', apiTime: '오전 12시 45분' },
+  { label: '축시(丑)', range: '01:30~03:29', apiTime: '오전 2시 30분'  },
+  { label: '인시(寅)', range: '03:30~05:29', apiTime: '오전 4시 30분'  },
+  { label: '묘시(卯)', range: '05:30~07:29', apiTime: '오전 6시 30분'  },
+  { label: '진시(辰)', range: '07:30~09:29', apiTime: '오전 8시 30분'  },
+  { label: '사시(巳)', range: '09:30~11:29', apiTime: '오전 10시 30분' },
+  { label: '오시(午)', range: '11:30~13:29', apiTime: '오후 12시 30분' },
+  { label: '미시(未)', range: '13:30~15:29', apiTime: '오후 2시 30분'  },
+  { label: '신시(申)', range: '15:30~17:29', apiTime: '오후 4시 30분'  },
+  { label: '유시(酉)', range: '17:30~19:29', apiTime: '오후 6시 30분'  },
+  { label: '술시(戌)', range: '19:30~21:29', apiTime: '오후 8시 30분'  },
+  { label: '해시(亥)', range: '21:30~23:29', apiTime: '오후 10시 30분' },
+] as const
+
 export default function HomePage() {
   const router = useRouter()
   const [rows, setRows] = useState<NameRow[]>([makeRow(), makeRow(), makeRow()])
@@ -25,8 +41,8 @@ export default function HomePage() {
   const [birthYear, setBirthYear] = useState('')
   const [birthMonth, setBirthMonth] = useState('')
   const [birthDay, setBirthDay] = useState('')
-  const [birthTime, setBirthTime] = useState({ ampm: '오전', hour: '', minute: '' })
-  const [timeUnknown, setTimeUnknown] = useState(false)
+  // null = 시간 모름, number = SIJIN 인덱스
+  const [sijinIdx, setSijinIdx] = useState<number | null>(null)
   const [devLoading, setDevLoading] = useState(false)
 
   const handleUpdate = (id: string, patch: Partial<NameRow>) => {
@@ -67,10 +83,8 @@ export default function HomePage() {
 
   const birthDateForApi = (() => {
     if (!birthDateFormatted) return ''
-    if (timeUnknown || (!birthTime.hour && !birthTime.minute)) return birthDateFormatted
-    const h = birthTime.hour ? `${birthTime.ampm} ${birthTime.hour}시` : ''
-    const m = birthTime.minute ? ` ${birthTime.minute}분` : ''
-    return `${birthDateFormatted} ${h}${m}`.trim()
+    if (sijinIdx === null) return birthDateFormatted
+    return `${birthDateFormatted} ${SIJIN[sijinIdx].apiTime}`
   })()
 
   const canAnalyze = inputName.trim().length > 0 && !!(birthYear && birthMonth && birthDay)
@@ -193,49 +207,48 @@ export default function HomePage() {
           <p className="text-[#B0A090] text-xs mt-1.5">양력 기준으로 계산됩니다</p>
         </div>
 
-        {/* 태어난 시간 */}
+        {/* 태어난 시간 — 시진(時辰) 선택 */}
         <div>
-          <label className="block text-[#3D2B1F] text-sm mb-2 font-medium">태어난 시간 <span className="text-[#B0A090] font-normal">(선택)</span></label>
-          <div className={`flex gap-2 ${timeUnknown ? 'opacity-40 pointer-events-none' : ''}`}>
-            <div className="flex rounded-lg overflow-hidden border border-[#C4A882]">
-              {['오전', '오후'].map(v => (
+          <label className="block text-[#3D2B1F] text-sm mb-3 font-medium">
+            태어난 시간 <span className="text-[#B0A090] font-normal">(선택)</span>
+          </label>
+          <div className="border border-[#C4A882] overflow-hidden">
+            {/* 시간 모름 */}
+            <button
+              onClick={() => setSijinIdx(null)}
+              className={`w-full flex items-center justify-between px-4 py-3 text-sm transition-colors border-b border-[#D4B896] ${
+                sijinIdx === null
+                  ? 'bg-[#3D2B1F] text-[#FAF5EA]'
+                  : 'bg-[#FAF5EA] text-[#8B7355] hover:bg-[#F0E6CC]'
+              }`}
+            >
+              <span className="font-medium">시간 모름</span>
+              {sijinIdx === null && <span className="text-[#C4973A] text-xs">●</span>}
+            </button>
+            {/* 12 시진 — 2열 그리드 */}
+            <div className="grid grid-cols-2">
+              {SIJIN.map((s, i) => (
                 <button
-                  key={v}
-                  onClick={() => setBirthTime(t => ({ ...t, ampm: v }))}
-                  className={`px-4 py-2.5 text-sm transition-colors ${
-                    birthTime.ampm === v
-                      ? 'bg-[#3D2B1F] text-[#FAF5EA]'
-                      : 'bg-[#FAF5EA] text-[#8B7355]'
+                  key={i}
+                  onClick={() => setSijinIdx(i)}
+                  className={`flex items-center justify-between px-4 py-3 text-sm transition-colors border-b border-r border-[#D4B896] last:border-r-0 ${
+                    i % 2 === 1 ? 'border-r-0' : ''
+                  } ${
+                    sijinIdx === i
+                      ? 'bg-[#FFF9ED] text-[#2C1A0E]'
+                      : 'bg-[#FAF5EA] text-[#3D2B1F] hover:bg-[#F0E6CC]'
                   }`}
                 >
-                  {v}
+                  <span>
+                    <span className={`font-medium ${sijinIdx === i ? 'text-[#C4973A]' : ''}`}>{s.label}</span>
+                    <span className="block text-[10px] text-[#B0A090] mt-0.5">{s.range}</span>
+                  </span>
+                  {sijinIdx === i && <span className="text-[#C4973A] text-xs shrink-0 ml-1">●</span>}
                 </button>
               ))}
             </div>
-            <input
-              type="number" min={1} max={12}
-              value={birthTime.hour}
-              onChange={e => setBirthTime(t => ({ ...t, hour: e.target.value }))}
-              placeholder="시"
-              className="flex-1 bg-[#FAF5EA] border border-[#C4A882] rounded-lg px-3 py-2.5 text-[#2C1A0E] text-center placeholder-[#C4A882] focus:outline-none focus:border-[#8B5A2B] transition-colors"
-            />
-            <input
-              type="number" min={0} max={59}
-              value={birthTime.minute}
-              onChange={e => setBirthTime(t => ({ ...t, minute: e.target.value }))}
-              placeholder="분"
-              className="flex-1 bg-[#FAF5EA] border border-[#C4A882] rounded-lg px-3 py-2.5 text-[#2C1A0E] text-center placeholder-[#C4A882] focus:outline-none focus:border-[#8B5A2B] transition-colors"
-            />
           </div>
-          <label className="flex items-center gap-2 mt-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={timeUnknown}
-              onChange={e => setTimeUnknown(e.target.checked)}
-              className="accent-[#8B5A2B]"
-            />
-            <span className="text-[#8B7355] text-sm">시간을 모릅니다</span>
-          </label>
+          <p className="text-[#B0A090] text-xs mt-1.5">태어난 시간대를 선택하면 시주(時柱)까지 계산됩니다</p>
         </div>
 
         {/* 분석 시작 버튼 */}

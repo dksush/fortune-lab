@@ -14,10 +14,21 @@ interface Props {
   params: Promise<{ uuid: string }>
 }
 
+// UUID 형식(36자) 여부로 조회 컬럼 결정
+function fortuneQuery(supabase: ReturnType<typeof createServiceClient>, id: string) {
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+  return isUuid
+    ? supabase.from('fortunes').select('*').eq('id', id).single()
+    : supabase.from('fortunes').select('*').eq('short_id', id).single()
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { uuid } = await params
   const supabase = createServiceClient()
-  const { data } = await supabase.from('fortunes').select('input_name').eq('id', uuid).single()
+  const isUuidFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid)
+  const { data } = await (isUuidFormat
+    ? supabase.from('fortunes').select('input_name').eq('id', uuid).single()
+    : supabase.from('fortunes').select('input_name').eq('short_id', uuid).single())
   return {
     title: data ? `${data.input_name}의 이름 풀이` : '이름 풀이',
     openGraph: {
@@ -81,11 +92,7 @@ export default async function ResultPage({ params }: Props) {
   const { uuid } = await params
   const supabase = createServiceClient()
 
-  const { data: fortune } = await supabase
-    .from('fortunes')
-    .select('*')
-    .eq('id', uuid)
-    .single()
+  const { data: fortune } = await fortuneQuery(supabase, uuid)
 
   if (!fortune) notFound()
 
