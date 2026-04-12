@@ -19,23 +19,28 @@ export function LifeDirectionTabs({ data }: { data: LifeDirection }) {
 
   return (
     <div>
-      <div className="flex overflow-hidden border border-[#C4A882]">
+      <div className="flex overflow-hidden rounded-t-2xl border border-white/40"
+        style={{ background: 'rgba(255,255,255,0.3)' }}>
         {TABS.map(tab => (
           <button
             key={tab.key}
             onClick={() => setActive(tab.key)}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
+            className={`flex-1 py-3 text-sm font-medium transition-all ${
               active === tab.key
-                ? 'bg-[#3D2B1F] text-[#FAF5EA]'
-                : 'bg-[#FAF5EA] text-[#8B7355] hover:bg-[#F0E6CC]'
+                ? 'text-white'
+                : 'text-[#6D6661] hover:text-[#D95D39]'
             }`}
+            style={active === tab.key ? {
+              background: 'linear-gradient(to right, #D95D39, #F28C6A)',
+            } : {}}
           >
             {tab.label}
           </button>
         ))}
       </div>
-      <div className="bg-[#FAF5EA] border border-t-0 border-[#C4A882] p-5 min-h-[120px]">
-        <p className="text-sm leading-loose text-[#3D2B1F]">{data[active]}</p>
+      <div className="rounded-b-2xl border border-t-0 border-white/40 p-5 min-h-[120px]"
+        style={{ background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(16px)' }}>
+        <p className="text-sm leading-loose text-[#2D2926]">{data[active]}</p>
       </div>
     </div>
   )

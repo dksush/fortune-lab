@@ -192,7 +192,7 @@ export default function HomePage() {
                   onClick={() => setCalendarType(type)}
                   className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
                     calendarType === type
-                      ? 'bg-[#5D739D] text-white shadow-sm'
+                      ? 'bg-[#D95D39] text-white shadow-sm'
                       : 'text-[#6D6661] hover:text-[#2D2926]'
                   }`}
                 >

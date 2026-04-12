@@ -42,13 +42,13 @@ export function ShareActions({ uuid, inputName }: Props) {
     <div className="flex gap-2">
       <button
         onClick={handleKakao}
-        className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#FEE500] hover:bg-[#F5DB00] text-[#3C1E1E] font-semibold rounded-xl transition-colors text-sm"
+        className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#FEE500] hover:bg-[#F5DB00] text-[#3C1E1E] font-semibold rounded-2xl transition-colors text-sm"
       >
         <span>💬</span> 카카오 공유
       </button>
       <button
         onClick={handleCopy}
-        className="flex-1 flex items-center justify-center gap-2 py-3 border border-[#C4973A] hover:bg-[#FAF5EA] text-[#3D2B1F] font-semibold rounded-xl transition-colors text-sm"
+        className="flex-1 flex items-center justify-center gap-2 py-3 border border-[#2D2926]/20 hover:bg-[#2D2926]/5 text-[#2D2926] font-semibold rounded-2xl transition-colors text-sm"
       >
         {copied ? '✓ 복사됨' : '🔗 링크 복사'}
       </button>
