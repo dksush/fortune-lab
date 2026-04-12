@@ -23,7 +23,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={notoSerifKR.variable}>
-      <body className="bg-[#F5EDD8] text-[#2C1A0E] min-h-screen antialiased font-serif">
+      <head>
+        <link
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-[#FCF9F7] text-[#2D2926] min-h-screen antialiased">
         {children}
         <KakaoInit />
       </body>

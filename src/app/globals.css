@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F5EDD8;
-  --foreground: #2C1A0E;
+  --background: #FCF9F7;
+  --foreground: #2D2926;
 }
 
 @theme inline {
@@ -14,5 +14,20 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.ethereal-gradient {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 93, 57, 0.13) 0%, transparent 50%),
+    radial-gradient(circle at 100% 0%, rgba(93, 115, 157, 0.13) 0%, transparent 50%),
+    radial-gradient(circle at 50% 60%, rgba(217, 93, 57, 0.05) 0%, transparent 70%),
+    #FCF9F7;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
 }

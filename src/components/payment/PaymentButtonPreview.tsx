@@ -51,7 +51,8 @@ export function PaymentButtonPreview({ inputName, hanjaIds, extraHanja, birthDat
       })
     } catch (err: any) {
       if (err.code !== 'USER_CANCEL') {
-        alert('결제 중 오류가 발생했습니다. 다시 시도해주세요.')
+        console.error('[Toss] error:', err)
+        alert(`결제 오류: ${err.message ?? err.code ?? JSON.stringify(err)}`)
       }
     } finally {
       setLoading(false)
@@ -62,7 +63,11 @@ export function PaymentButtonPreview({ inputName, hanjaIds, extraHanja, birthDat
     <button
       onClick={handlePay}
       disabled={loading || !inputName.trim()}
-      className="w-full py-4 bg-[#C4973A] hover:bg-[#B8872A] text-[#2C1A0E] font-bold text-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed tracking-wide"
+      className="w-full py-5 rounded-full text-white font-bold text-lg active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
+      style={{
+        background: 'linear-gradient(to right, #D95D39, #F28C6A)',
+        boxShadow: '0 12px 40px rgba(217,93,57,0.45)',
+      }}
     >
       {loading ? '결제창 열기…' : '✦ 전체 해석 열람하기 · 990원 ✦'}
     </button>
