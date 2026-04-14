@@ -493,25 +493,13 @@ export default async function ResultPage({ params }: Props) {
           )}
 
           {/* CTA 버튼 */}
-          <div className="relative flex gap-2">
-            <a
-              href="#share-section"
-              className="flex-[1.3] py-3 px-3 rounded-xl text-center text-sm font-bold text-white flex items-center justify-center gap-1.5"
-              style={{ background: '#D95D39' }}
-            >
-              📤 카드 저장 · 공유
-            </a>
-            <Link
-              href="/"
-              className="flex-1 py-3 px-3 rounded-xl text-center text-xs font-semibold text-white"
-              style={{
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.15)',
-              }}
-            >
-              👤 친구 이름 분석
-            </Link>
-          </div>
+          <a
+            href="#share-section"
+            className="w-full py-3 px-3 rounded-xl text-center text-sm font-bold text-white flex items-center justify-center gap-1.5"
+            style={{ background: '#D95D39' }}
+          >
+            📤 카드 저장 · 공유
+          </a>
         </div>
 
         {/* ── Block 2: 사주 × 이름 궁합 ──────────────────────────────── */}
