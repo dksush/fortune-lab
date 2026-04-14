@@ -209,69 +209,106 @@ export default async function PreviewPage({
   const currentYear = new Date().getFullYear()
 
   return (
-    <main style={{ background: '#F5F0EB', minHeight: '100vh' }} className="relative overflow-x-hidden">
-      <div className="max-w-md mx-auto px-4 pt-6 pb-44">
+    <main className="ethereal-gradient min-h-screen">
+      {/* 배경 블러 장식 */}
+      <div className="fixed top-[-10%] right-[-10%] w-[80%] h-[40%] rounded-full pointer-events-none"
+        style={{ background: 'rgba(217,93,57,0.08)', filter: 'blur(120px)' }} />
+      <div className="fixed bottom-[-10%] left-[-10%] w-[80%] h-[40%] rounded-full pointer-events-none"
+        style={{ background: 'rgba(93,115,157,0.08)', filter: 'blur(120px)' }} />
+
+      <div className="relative z-10 max-w-[480px] mx-auto px-4 pt-6 pb-44 space-y-3">
 
         {/* ── 1. 앱 헤더 ── */}
-        <div className="flex justify-between items-center mb-5">
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#2A1A0E' }}>이름 운세 분석</span>
-          {birth && <span style={{ fontSize: 12, color: '#888' }}>{birth.split(' ')[0]}</span>}
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-semibold text-[#2D2926]">이름 운세 분석</span>
+          {birth && <span className="text-xs text-[#6D6661]">{birth.split(' ')[0]}</span>}
         </div>
 
         {/* ── 2. 다크 히어로 카드 ── */}
-        <div style={{ background: '#2A1A0E', borderRadius: 16, padding: 20, marginBottom: 12 }}>
-          <p style={{ fontSize: 11, color: '#C4956A', letterSpacing: '0.08em', marginBottom: 8 }}>
-            이름 운세 분석
-          </p>
+        <div
+          className="rounded-3xl p-5 relative overflow-hidden"
+          style={{ background: 'linear-gradient(150deg, #1E1A18 0%, #3D2010 60%, #1E1A18 100%)' }}
+        >
+          <div className="absolute top-[-40px] right-[-40px] w-40 h-40 rounded-full pointer-events-none"
+            style={{ background: 'rgba(217,93,57,0.12)' }} />
+          <div className="absolute bottom-[-30px] left-[-20px] w-24 h-24 rounded-full pointer-events-none"
+            style={{ background: 'rgba(93,115,157,0.15)' }} />
 
-          <div style={{ fontSize: 32, fontWeight: 700, color: '#fff', letterSpacing: '0.05em', marginBottom: 2 }}>
-            {inputName}
+          <div className="relative flex justify-between items-center mb-4">
+            <span className="text-[10px] tracking-[2px] font-bold" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              ✦ 이름 운세 분석
+            </span>
+            {birth && <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{birth.split(' ')[0]}</span>}
           </div>
-          {allSelectedHanja.length > 0 && (
-            <div style={{ fontSize: 16, color: '#C4956A', marginBottom: 16, letterSpacing: '0.1em' }}>
-              {allSelectedHanja.map(h => h.character).join(' ')}
+
+          <div className="relative mb-4">
+            <div className="flex items-baseline gap-3 mb-1">
+              <h1 className="text-4xl font-black text-white tracking-[-1px]">{inputName}</h1>
+              {allSelectedHanja.length > 0 && (
+                <span className="text-xl font-light tracking-[4px]" style={{ color: '#D95D39' }}>
+                  {allSelectedHanja.map(h => h.character).join('')}
+                </span>
+              )}
             </div>
-          )}
-
-          {nameScore ? (
-            <>
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, marginBottom: 6 }}>
-                <span style={{ fontSize: 48, fontWeight: 700, color: '#E07A3A', lineHeight: 1 }}>
-                  {nameScore.total}
-                </span>
-                <span style={{ fontSize: 16, color: '#888', marginBottom: 8 }}>/100</span>
+            {allSelectedHanja.length > 0 && (
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {allSelectedHanja.map((h, i) => (
+                  <span key={i} className="text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    {i > 0 && <span style={{ color: 'rgba(255,255,255,0.2)', marginRight: 4 }}>·</span>}
+                    {h.meaning} {h.reading}
+                  </span>
+                ))}
               </div>
-              <div style={{ height: 4, background: '#3a2a1a', borderRadius: 2, width: '100%', marginBottom: 6 }}>
-                <div style={{ height: 4, background: '#E07A3A', borderRadius: 2, width: `${nameScore.total}%` }} />
-              </div>
-              <p style={{ fontSize: 12, color: '#E07A3A' }}>{scoreToPercentile(nameScore.total)}</p>
-            </>
-          ) : (
-            <div style={{ height: 4, background: '#3a2a1a', borderRadius: 2, width: '100%', marginBottom: 6 }} />
-          )}
+            )}
+          </div>
 
-          {teaser && (
-            <div style={{ borderTop: '1px solid #3a2a1a', marginTop: 14, paddingTop: 14 }}>
-              <p style={{ fontSize: 14, fontWeight: 500, color: '#fff', lineHeight: 1.6 }}>
-                {teaser.prefix}{' '}
-                <span className="blur-sm select-none pointer-events-none" aria-hidden>
-                  {teaser.blurred}
-                </span>
-                {teaser.suffix}
-              </p>
+          {nameScore && (
+            <div className="relative grid gap-2 mb-4" style={{ gridTemplateColumns: 'auto 1fr' }}>
+              <div className="rounded-2xl px-4 py-3 min-w-[88px]" style={{ background: 'rgba(255,255,255,0.07)' }}>
+                <div className="text-[10px] font-bold tracking-[1px] mb-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  종합 점수
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-black leading-none" style={{ color: '#D95D39' }}>
+                    {nameScore.total}
+                  </span>
+                  <span className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>/100</span>
+                </div>
+                <div className="mt-2 rounded-full overflow-hidden" style={{ height: 3, background: 'rgba(0,0,0,0.3)' }}>
+                  <div className="h-full rounded-full" style={{ width: `${nameScore.total}%`, background: '#D95D39' }} />
+                </div>
+                <div className="text-[10px] mt-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  {scoreToPercentile(nameScore.total)}
+                </div>
+              </div>
+              {teaser && (
+                <div className="rounded-2xl px-3 py-3" style={{ background: 'rgba(255,255,255,0.07)' }}>
+                  <div className="text-[10px] font-bold tracking-[1px] mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                    이름 총평
+                  </div>
+                  <p className="text-sm font-medium text-white leading-snug">
+                    {teaser.prefix}{' '}
+                    <span className="blur-sm select-none pointer-events-none" aria-hidden>{teaser.blurred}</span>
+                    {teaser.suffix}
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
           {saju && elements && (
-            <div style={{ display: 'flex', gap: 6, marginTop: 16 }}>
+            <div className="relative flex gap-1.5">
               {OHAENG_ELEMENTS.map(el => {
                 const count = elements[el] ?? 0
                 const pct = totalElCount > 0 ? Math.round((count / totalElCount) * 100) : 20
                 return (
-                  <div key={el} style={{ flex: 1, background: '#3a2a1a', borderRadius: 8, padding: '8px 4px', textAlign: 'center' }}>
-                    <span style={{ fontSize: 16, display: 'block', marginBottom: 3 }}>{ELEMENT_ICON[el]}</span>
-                    <span style={{ fontSize: 13, color: '#C4956A' }}>{el}</span>
-                    <div style={{ height: 2, background: ELEMENT_COLOR[el], width: `${Math.max(pct, 4)}%`, borderRadius: 1, marginTop: 5 }} />
+                  <div key={el} className="flex-1 rounded-xl py-2 px-1 text-center"
+                    style={{ background: 'rgba(255,255,255,0.07)' }}>
+                    <div className="text-sm mb-1">{ELEMENT_ICON[el]}</div>
+                    <div className="text-[10px] font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{el}</div>
+                    <div className="rounded-full overflow-hidden" style={{ height: 3, background: 'rgba(0,0,0,0.2)' }}>
+                      <div className="h-full rounded-full" style={{ width: `${Math.max(pct, 4)}%`, background: ELEMENT_COLOR[el] }} />
+                    </div>
                   </div>
                 )
               })}
@@ -281,22 +318,21 @@ export default async function PreviewPage({
 
         {/* ── 3. 글자별 한자 풀이 ── */}
         {allSelectedHanja.length > 0 && (
-          <SectionCard>
-            <SectionLabel>글자별 한자 풀이</SectionLabel>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <GlassCard>
+            <SectionHeader>글자별 한자 풀이</SectionHeader>
+            <div className="space-y-3">
               {allSelectedHanja.map((h, i) => {
                 const chip = HANJA_CHIP_STYLE[i % HANJA_CHIP_STYLE.length]
                 const placeholderDesc = `${h.character}이 품은 ${h.meaning}의 기운은 이 이름에 깊은 흔적을 남기며, 사주와 어우러져 독특한 운명의 패턴을 만들어냅니다.`
                 return (
-                  <div key={i} style={{ display: 'flex', gap: 10 }}>
-                    <div style={{ width: 44, height: 44, background: chip.bg, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 500, color: chip.text, flexShrink: 0 }}>
+                  <div key={i} className="flex gap-3">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl font-medium shrink-0"
+                      style={{ background: chip.bg, color: chip.text }}>
                       {h.character}
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#2A1A0E', marginBottom: 3 }}>
-                        {h.reading} · {h.meaning}
-                      </div>
-                      <p className="blur-sm select-none pointer-events-none" style={{ fontSize: 12, color: '#888', lineHeight: 1.5 }} aria-hidden>
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-[#2D2926] mb-1">{h.reading} · {h.meaning}</div>
+                      <p className="blur-sm select-none pointer-events-none text-xs text-[#6D6661] leading-relaxed" aria-hidden>
                         {placeholderDesc}
                       </p>
                     </div>
@@ -304,165 +340,142 @@ export default async function PreviewPage({
                 )
               })}
             </div>
-          </SectionCard>
+          </GlassCard>
         )}
 
         {/* ── 4. 수리 획수 분석 ── */}
         {suriGeaksu && (
-          <SectionCard>
-            <SectionLabel>수리 획수 분석</SectionLabel>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 10 }}>
+          <GlassCard>
+            <SectionHeader>수리 획수 분석</SectionHeader>
+            <div className="grid grid-cols-4 gap-2 mb-3">
               {suriGeaksu.map(item => (
-                <div key={item.label} style={{ background: '#F5F0EB', borderRadius: 8, padding: '10px 6px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 20, fontWeight: 700, color: item.color }}>{item.value}</div>
-                  <div style={{ fontSize: 10, color: '#888', marginTop: 2 }}>{item.label}</div>
+                <div key={item.label} className="rounded-xl py-2.5 px-1 text-center"
+                  style={{ background: 'rgba(0,0,0,0.04)' }}>
+                  <div className="text-xl font-bold" style={{ color: item.color }}>{item.value}</div>
+                  <div className="text-[10px] text-[#6D6661] mt-1">{item.label}</div>
                 </div>
               ))}
             </div>
-            <div style={{ background: '#F5F0EB', borderRadius: 8, padding: '10px 12px' }}>
-              <p className="blur-sm select-none pointer-events-none" style={{ fontSize: 12, color: '#555', lineHeight: 1.6 }} aria-hidden>
+            <div className="rounded-xl p-3" style={{ background: 'rgba(0,0,0,0.04)' }}>
+              <p className="blur-sm select-none pointer-events-none text-xs text-[#6D6661] leading-relaxed" aria-hidden>
                 형격 {suriGeaksu[1].value}수는 대인관계와 사회적 활동의 방향성을 나타냅니다. 정격 {suriGeaksu[3].value}수는 평생을 관통하는 총체적 운명의 패턴을 보여줍니다.
               </p>
             </div>
-          </SectionCard>
+          </GlassCard>
         )}
 
         {/* ── 5. 오행 분석 ── */}
         {saju && elements && (
-          <SectionCard>
-            <SectionLabel>오행 분석</SectionLabel>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 10 }}>
+          <GlassCard>
+            <SectionHeader>오행 분석</SectionHeader>
+            <div className="space-y-2 mb-3">
               {OHAENG_ELEMENTS.map(el => {
                 const count = elements[el] ?? 0
                 const pct = totalElCount > 0 ? Math.round((count / totalElCount) * 100) : 20
                 return (
-                  <div key={el} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontSize: 12, color: '#444', width: 36 }}>{ELEMENT_ICON[el]} {el}</span>
-                    <div style={{ flex: 1, height: 6, background: '#F0EDE8', borderRadius: 3 }}>
-                      <div style={{ height: 6, background: ELEMENT_BAR_BG[el], borderRadius: 3, width: `${pct}%` }} />
+                  <div key={el} className="flex items-center gap-2">
+                    <span className="text-xs text-[#6D6661] w-9">{ELEMENT_ICON[el]} {el}</span>
+                    <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.08)' }}>
+                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: ELEMENT_BAR_BG[el] }} />
                     </div>
-                    <span style={{ fontSize: 11, color: '#888', width: 30, textAlign: 'right' }}>{pct}%</span>
+                    <span className="text-[11px] text-[#6D6661] w-8 text-right">{pct}%</span>
                   </div>
                 )
               })}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#666', borderTop: '1px solid #F0EDE8', paddingTop: 8, marginBottom: weakestEl ? 10 : 0 }}>
-              <span>용신 <strong style={{ color: '#2A1A0E' }}>{saju.yongsinLabel}</strong></span>
-              <span>기신 <strong style={{ color: '#2A1A0E' }}>{saju.gisinLabel}</strong></span>
+            <div className="flex justify-between text-xs text-[#6D6661] border-t pt-2 mb-0"
+              style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+              <span>용신 <strong className="text-[#2D2926]">{saju.yongsinLabel}</strong></span>
+              <span>기신 <strong className="text-[#2D2926]">{saju.gisinLabel}</strong></span>
             </div>
             {weakestEl && (
-              <div style={{ background: '#FAECE7', borderLeft: '3px solid #E07A3A', borderRadius: '0 8px 8px 0', padding: '10px 12px', fontSize: 12, color: '#712B13', lineHeight: 1.6 }}>
+              <div className="mt-3 rounded-xl p-3 text-xs leading-relaxed"
+                style={{ background: 'rgba(217,93,57,0.07)', borderLeft: '3px solid #D95D39', color: '#6D6661' }}>
                 {WEAKEST_ADVICE[weakestEl]}
               </div>
             )}
-          </SectionCard>
+          </GlassCard>
         )}
 
         {/* ── 6. 대운표 ── */}
         {saju && daeunCycles.length > 0 && (
-          <SectionCard>
-            <SectionLabel>대운표 · 10년 주기</SectionLabel>
-
+          <GlassCard>
+            <SectionHeader>대운표 · 10년 주기</SectionHeader>
             <div>
               {daeunCycles.map((cycle, i) => {
                 const isCurrent = i === pastCount
                 const phrase = getDaeunPhrase(cycle.gan, cycle.ji)
                 return (
-                  <div
-                    key={i}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      padding: '9px 0',
-                      borderBottom: i < daeunCycles.length - 1 ? '1px solid #F0EDE8' : 'none',
-                    }}
-                  >
-                    {/* 왼쪽: 나이대 + 간지 (항상 공개) */}
-                    <div style={{ flexShrink: 0, minWidth: 80 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 2 }}>
-                        <span style={{ fontSize: 11, color: isCurrent ? '#E07A3A' : '#aaa', fontWeight: isCurrent ? 700 : 400 }}>
+                  <div key={i} className="flex items-center gap-3 py-2"
+                    style={{ borderBottom: i < daeunCycles.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none' }}>
+                    {/* 왼쪽: 나이대 + 간지 */}
+                    <div className="shrink-0 w-20">
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <span className="text-[11px]" style={{ color: isCurrent ? '#D95D39' : '#9D9690', fontWeight: isCurrent ? 700 : 400 }}>
                           {cycle.startAge}~{cycle.endAge}세
                         </span>
                         {isCurrent && (
-                          <span style={{ background: '#E07A3A', color: '#fff', fontSize: 9, padding: '1px 5px', borderRadius: 8, flexShrink: 0 }}>
-                            현재
-                          </span>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full text-white" style={{ background: '#D95D39' }}>현재</span>
                         )}
                       </div>
-                      <span style={{ fontSize: 17, fontWeight: 700, color: isCurrent ? '#E07A3A' : '#2A1A0E', letterSpacing: '0.05em' }}>
+                      <span className="text-base font-bold tracking-wide" style={{ color: isCurrent ? '#D95D39' : '#2D2926' }}>
                         {cycle.gan}{cycle.ji}
                       </span>
                     </div>
-
-                    {/* 오른쪽: 설명 (블러 잠금) */}
-                    <p
-                      className="blur-sm select-none pointer-events-none"
-                      style={{ fontSize: 12, color: '#555', lineHeight: 1.6, flex: 1 }}
-                      aria-hidden
-                    >
+                    {/* 오른쪽: 설명 (블러) */}
+                    <p className="blur-sm select-none pointer-events-none text-xs text-[#6D6661] leading-relaxed flex-1" aria-hidden>
                       {phrase}
                     </p>
                   </div>
                 )
               })}
             </div>
-          </SectionCard>
+          </GlassCard>
         )}
 
         {/* ── 7. AI 전체 해석 unlock-wall ── */}
-        <div style={{ position: 'relative', borderRadius: 14, overflow: 'hidden', marginBottom: 12 }}>
+        <div className="relative rounded-2xl overflow-hidden">
           <div
-            style={{ background: '#fff', padding: 16, filter: 'blur(3px)', userSelect: 'none', pointerEvents: 'none' }}
+            className="rounded-2xl p-5 border border-white/40"
+            style={{
+              background: 'rgba(255,255,255,0.55)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              filter: 'blur(3px)',
+              userSelect: 'none',
+              pointerEvents: 'none',
+            }}
             aria-hidden
           >
-            <p style={{ fontSize: 11, fontWeight: 600, color: '#C4956A', letterSpacing: '0.06em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ display: 'inline-block', width: 3, height: 13, background: '#E07A3A', borderRadius: 2 }} />
-              {currentYear}년 상세 운세
-            </p>
-            <p style={{ fontSize: 13, color: '#444', lineHeight: 1.7, marginBottom: 12 }}>
+            <SectionHeader>{currentYear}년 상세 운세</SectionHeader>
+            <p className="text-sm text-[#2D2926] leading-relaxed mb-3">
               {currentYear}년은 강렬한 기운이 넘치는 해로, 이 이름의 오행과 정면으로 마주하는 큰 변화와 결단의 시기입니다.
               {allSelectedHanja[0] ? ` ${allSelectedHanja[0].character}은 외부의 급격한 변화 속에서 내면의 중심을 잃지 않도록 닻의 역할을 합니다.` : ''}
             </p>
-            <p style={{ fontSize: 11, fontWeight: 600, color: '#C4956A', letterSpacing: '0.06em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ display: 'inline-block', width: 3, height: 13, background: '#E07A3A', borderRadius: 2 }} />
-              이름 × 사주 조화 분석
+            <SectionHeader>이름 × 사주 조화 분석</SectionHeader>
+            <p className="text-sm text-[#2D2926] leading-relaxed mb-3">
+              이름이 지닌 오행 기운이 사주의 용신·기신과 어떻게 공명하는지 깊이 분석합니다.
             </p>
-            <p style={{ fontSize: 13, color: '#444', lineHeight: 1.7, marginBottom: 12 }}>
-              이름이 지닌 오행 기운이 사주의 용신·기신과 어떻게 공명하는지, 어떤 방향으로 작용하는지를 깊이 분석합니다. 이름의 소리와 뜻이 만들어내는 고유한 에너지 패턴을 풀어냅니다.
-            </p>
-            <p style={{ fontSize: 11, fontWeight: 600, color: '#C4956A', letterSpacing: '0.06em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ display: 'inline-block', width: 3, height: 13, background: '#E07A3A', borderRadius: 2 }} />
-              포함 항목
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-              {['성격 · 기질 분석', `직업 · 재물 운`, '대인관계 · 연애', `${currentYear}년 운세`, '이름 개운법', '종합 총평'].map(item => (
-                <div key={item} style={{ background: '#F5F0EB', borderRadius: 6, padding: '6px 10px', fontSize: 12, color: '#555' }}>
+            <div className="grid grid-cols-2 gap-2">
+              {['성격 · 기질 분석', '직업 · 재물 운', '대인관계 · 연애', `${currentYear}년 운세`, '이름 개운법', '종합 총평'].map(item => (
+                <div key={item} className="rounded-xl px-3 py-2 text-xs text-[#6D6661]"
+                  style={{ background: 'rgba(0,0,0,0.04)' }}>
                   {item}
                 </div>
               ))}
             </div>
           </div>
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'rgba(245,240,235,0.75)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-            }}
-          >
-            <div style={{ width: 32, height: 32, background: '#2A1A0E', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+            style={{ background: 'rgba(252,249,247,0.78)' }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ background: '#2D2926' }}>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <rect x="3.5" y="7" width="9" height="7.5" rx="1.5" fill="white" />
                 <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" />
               </svg>
             </div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#2A1A0E' }}>전체 해석 열람하기</div>
-            <div style={{ fontSize: 11, color: '#888', textAlign: 'center', lineHeight: 1.5 }}>
+            <div className="text-sm font-semibold text-[#2D2926]">전체 해석 열람하기</div>
+            <div className="text-xs text-[#6D6661] text-center leading-relaxed">
               성격 · 직업·재물 · 관계 분석 포함<br />결제 후 즉시 공개
             </div>
           </div>
@@ -470,33 +483,18 @@ export default async function PreviewPage({
 
         {/* ── 8. 개인화 배너 ── */}
         {birth && inputName && (
-          <div
-            style={{
-              background: '#FFF8F3',
-              border: '1px solid #F5C4B3',
-              borderRadius: 12,
-              padding: '12px 14px',
-              marginBottom: 12,
-              fontSize: 12,
-              color: '#712B13',
-              lineHeight: 1.6,
-              textAlign: 'center',
-            }}
-          >
-            이 분석은{' '}
-            <strong>{birth.split(' ')[0]}생, {inputName}님</strong>만을 위해
-            <br />생성된 결과입니다
+          <div className="rounded-2xl p-3 border border-white/40 text-center text-xs text-[#6D6661] leading-relaxed"
+            style={{ background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
+            이 분석은 <strong className="text-[#2D2926]">{birth.split(' ')[0]}생, {inputName}님</strong>만을 위해 생성된 결과입니다
           </div>
         )}
 
       </div>
 
       {/* ── Sticky 하단 결제 CTA ── */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"
-        style={{ background: 'linear-gradient(to top, #F5F0EB 55%, transparent)' }}
-      >
-        <div className="max-w-md mx-auto px-4 pb-6 pt-8 pointer-events-auto">
+      <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"
+        style={{ background: 'linear-gradient(to top, #FCF9F7 55%, transparent)' }}>
+        <div className="max-w-[480px] mx-auto px-4 pb-6 pt-8 pointer-events-auto">
           <PaymentButtonPreview
             inputName={inputName}
             hanjaIds={hanjaIds}
@@ -510,19 +508,23 @@ export default async function PreviewPage({
   )
 }
 
-function SectionCard({ children }: { children: React.ReactNode }) {
+function GlassCard({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ background: '#fff', borderRadius: 14, padding: 16, marginBottom: 12 }}>
+    <div
+      className="rounded-2xl p-5 border border-white/40"
+      style={{ background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+    >
       {children}
     </div>
   )
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
-    <p style={{ fontSize: 11, fontWeight: 600, color: '#C4956A', letterSpacing: '0.06em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-      <span style={{ display: 'inline-block', width: 3, height: 13, background: '#E07A3A', borderRadius: 2, flexShrink: 0 }} />
-      {children}
-    </p>
+    <div className="flex items-center gap-3 mb-4">
+      <span className="w-1 h-5 rounded-full shrink-0"
+        style={{ background: 'linear-gradient(to bottom, #D95D39, #F28C6A)' }} />
+      <h2 className="text-base font-bold text-[#2D2926]">{children}</h2>
+    </div>
   )
 }
