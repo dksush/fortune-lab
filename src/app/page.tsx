@@ -460,7 +460,7 @@ export default function HomePage() {
               opacity: canAnalyze ? 1 : 0.5,
             }}
           >
-            <span>{canAnalyze ? `${inputName}의 운세 분석하기` : '이름의 기운 분석하기'}</span>
+            <span>{canAnalyze ? `${inputName} 풀이 시작하기` : '내 이름 풀이 시작하기'}</span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

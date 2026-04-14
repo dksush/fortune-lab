@@ -148,7 +148,7 @@ export function HanjaSelector({ rows, onUpdate, onAddRow, onRemoveRow, labels }:
                     onFocus={() => {
                       if (rowResults.length > 0) setActiveRowId(row.id)
                     }}
-                    placeholder={idx === 0 ? '예) 붉을 홍' : '예) 편안할 안'}
+                    placeholder={idx === 0 ? '예) 쇠 금' : idx === 1 ? '예) 백성 민' : '예) 뛰어날 준'}
                     className="w-full bg-white/60 border border-white/50 rounded-2xl px-4 py-2.5 text-[#2D2926] text-sm placeholder-[#B0A090] focus:outline-none focus:ring-1 focus:ring-[#D95D39]/30 transition-all"
                   />
                 )}
