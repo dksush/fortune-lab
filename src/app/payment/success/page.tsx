@@ -23,71 +23,96 @@ function LoadingSpinner({ name }: { name: string }) {
 
   return (
     <div className="text-center space-y-8">
-      {/* 회전 장식 */}
-      <div className="relative w-20 h-20 mx-auto">
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: 'linear-gradient(135deg, #D95D39, #F28C6A)',
-            animation: 'spin 3s linear infinite',
-            opacity: 0.15,
-          }}
-        />
-        <div
-          className="absolute inset-2 rounded-full flex items-center justify-center text-3xl font-bold font-serif"
-          style={{ background: '#FCF9F7', color: '#D95D39' }}
-        >
-          ✦
+      {/* 이름 */}
+      {name && (
+        <div className="space-y-1">
+          <p className="text-xs tracking-[0.25em] uppercase text-[#6D6661]">분석 중</p>
+          <p className="font-serif text-2xl font-bold text-[#2D2926]">{name}</p>
         </div>
-        {/* 회전 테두리 */}
-        <svg className="absolute inset-0 w-full h-full" style={{ animation: 'spin 2.5s linear infinite' }}>
+      )}
+
+      {/* 회전 장식 */}
+      <div className="relative w-24 h-24 mx-auto">
+        {/* 바깥 회전 링 */}
+        <svg className="absolute inset-0 w-full h-full" style={{ animation: 'spin 4s linear infinite' }}>
           <circle
-            cx="40" cy="40" r="36"
+            cx="48" cy="48" r="44"
             fill="none"
-            stroke="url(#grad)"
-            strokeWidth="2"
-            strokeDasharray="60 165"
+            stroke="url(#grad1)"
+            strokeWidth="1.5"
+            strokeDasharray="80 196"
             strokeLinecap="round"
           />
           <defs>
-            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#D95D39" />
               <stop offset="100%" stopColor="#F28C6A" stopOpacity="0" />
             </linearGradient>
           </defs>
         </svg>
+        {/* 안쪽 반대 방향 링 */}
+        <svg className="absolute inset-0 w-full h-full" style={{ animation: 'spin 6s linear infinite reverse' }}>
+          <circle
+            cx="48" cy="48" r="36"
+            fill="none"
+            stroke="rgba(93,115,157,0.3)"
+            strokeWidth="1"
+            strokeDasharray="40 186"
+            strokeLinecap="round"
+          />
+        </svg>
+        {/* 중앙 아이콘 */}
+        <div
+          className="absolute inset-0 m-auto w-14 h-14 rounded-full flex items-center justify-center font-serif font-bold"
+          style={{
+            background: 'linear-gradient(135deg, #FCF9F7, #F5EFE8)',
+            color: '#D95D39',
+            fontSize: '1.6rem',
+            boxShadow: '0 4px 20px rgba(217,93,57,0.2)',
+            animation: 'pulse-glow 2s ease-in-out infinite',
+          }}
+        >
+          ✦
+        </div>
       </div>
 
-      {/* 이름 */}
-      {name && (
-        <p className="font-serif text-2xl font-bold text-[#2D2926]">{name}</p>
-      )}
-
       {/* 단계별 메시지 */}
-      <div className="space-y-1 min-h-[48px]">
+      <div className="space-y-4 min-h-[64px]">
         <p
-          className="text-sm text-[#6D6661] transition-all duration-700"
+          className="text-sm text-[#6D6661] leading-relaxed"
           key={stepIdx}
+          style={{ animation: 'fade-step 0.6s ease-out' }}
         >
           {LOADING_STEPS[stepIdx]}…
         </p>
+        {/* 프로그레스 바 */}
+        <div className="w-48 mx-auto rounded-full overflow-hidden" style={{ height: 3, background: 'rgba(0,0,0,0.08)' }}>
+          <div
+            className="h-full rounded-full transition-all duration-700"
+            style={{
+              width: `${((stepIdx + 1) / LOADING_STEPS.length) * 100}%`,
+              background: 'linear-gradient(to right, #D95D39, #F28C6A)',
+            }}
+          />
+        </div>
         {/* 점 인디케이터 */}
-        <div className="flex justify-center gap-1.5 mt-3">
+        <div className="flex justify-center gap-1.5">
           {LOADING_STEPS.map((_, i) => (
             <div
               key={i}
-              className="w-1.5 h-1.5 rounded-full transition-all duration-500"
+              className="rounded-full transition-all duration-500"
               style={{
+                width: i === stepIdx ? 16 : 6,
+                height: 6,
                 background: i === stepIdx ? '#D95D39' : 'rgba(109,102,97,0.2)',
-                transform: i === stepIdx ? 'scale(1.4)' : 'scale(1)',
               }}
             />
           ))}
         </div>
       </div>
 
-      <p className="text-xs text-[#6D6661] opacity-60">
-        AI 분석 중입니다. 잠시만 기다려 주세요
+      <p className="text-[10px] text-[#6D6661] opacity-50 tracking-[0.2em] uppercase">
+        AI가 깊이 읽고 있습니다
       </p>
     </div>
   )
@@ -221,6 +246,14 @@ export default function PaymentSuccessPage() {
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 4px 20px rgba(217,93,57,0.2); }
+          50% { box-shadow: 0 4px 30px rgba(217,93,57,0.45); }
+        }
+        @keyframes fade-step {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </main>

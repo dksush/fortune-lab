@@ -2,46 +2,65 @@
 
 import { useState } from 'react'
 
-interface LifeDirection {
+interface Props {
   talent: string
   wealth: string
   relationships: string
+  thisYear?: string
 }
 
-const TABS: { key: keyof LifeDirection; label: string }[] = [
-  { key: 'talent', label: '재능·적성' },
-  { key: 'wealth', label: '재물·직업' },
-  { key: 'relationships', label: '인간관계' },
+type TabKey = 'thisYear' | 'talent' | 'wealth' | 'relationships'
+
+const ALL_TABS: { key: TabKey; label: string }[] = [
+  { key: 'thisYear', label: '운세' },
+  { key: 'talent', label: '성격' },
+  { key: 'wealth', label: '직업·재물' },
+  { key: 'relationships', label: '관계' },
 ]
 
-export function LifeDirectionTabs({ data }: { data: LifeDirection }) {
-  const [active, setActive] = useState<keyof LifeDirection>('talent')
+export function LifeDirectionTabs({ talent, wealth, relationships, thisYear }: Props) {
+  const tabs = thisYear ? ALL_TABS : ALL_TABS.filter(t => t.key !== 'thisYear')
+  const [active, setActive] = useState<TabKey>(tabs[0].key)
+
+  const content: Record<TabKey, string> = {
+    thisYear: thisYear ?? '',
+    talent,
+    wealth,
+    relationships,
+  }
 
   return (
     <div>
-      <div className="flex overflow-hidden rounded-t-2xl border border-white/40"
-        style={{ background: 'rgba(255,255,255,0.3)' }}>
-        {TABS.map(tab => (
+      {/* 탭 바 */}
+      <div
+        className="flex rounded-xl p-1 mb-4 gap-1"
+        style={{ background: 'rgba(0,0,0,0.05)' }}
+      >
+        {tabs.map(tab => (
           <button
             key={tab.key}
             onClick={() => setActive(tab.key)}
-            className={`flex-1 py-3 text-sm font-medium transition-all ${
+            className="flex-1 py-2 text-xs font-medium rounded-lg transition-all"
+            style={
               active === tab.key
-                ? 'text-white'
-                : 'text-[#6D6661] hover:text-[#D95D39]'
-            }`}
-            style={active === tab.key ? {
-              background: 'linear-gradient(to right, #D95D39, #F28C6A)',
-            } : {}}
+                ? {
+                    background: '#FFF',
+                    color: '#D95D39',
+                    fontWeight: 700,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+                  }
+                : { color: '#6D6661' }
+            }
           >
             {tab.label}
           </button>
         ))}
       </div>
-      <div className="rounded-b-2xl border border-t-0 border-white/40 p-5 min-h-[120px]"
-        style={{ background: 'rgba(255,255,255,0.55)', backdropFilter: 'blur(16px)' }}>
-        <p className="text-sm leading-loose text-[#2D2926]">{data[active]}</p>
-      </div>
+
+      {/* 콘텐츠 */}
+      <p className="text-sm leading-loose text-[#2D2926] min-h-[80px]">
+        {content[active]}
+      </p>
     </div>
   )
 }

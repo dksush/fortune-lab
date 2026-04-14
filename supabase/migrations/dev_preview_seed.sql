@@ -8,7 +8,7 @@ INSERT INTO fortunes (
   '안현호',
   '{}',
   '안현호',
-  $extra$[{"pos":0,"character":"安","reading":"안","meaning":"편안할"},{"pos":1,"character":"鉉","reading":"현","meaning":"솥귀"},{"pos":2,"character":"昊","reading":"호","meaning":"맑을"}]$extra$,
+  $extra$[{"pos":0,"character":"安","reading":"안","meaning":"편안할","stroke":6},{"pos":1,"character":"鉉","reading":"현","meaning":"솥귀","stroke":13},{"pos":2,"character":"昊","reading":"호","meaning":"맑을","stroke":8}]$extra$,
   '1992.08.28',
   'completed',
   'dev_bypass',
