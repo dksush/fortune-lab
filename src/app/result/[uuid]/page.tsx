@@ -436,28 +436,11 @@ export default async function ResultPage({ params }: Props) {
                   >
                     이름 총평
                   </div>
-                  <div
-                    className="text-sm font-bold text-white leading-snug mb-2"
-                    style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
+                  <div className="text-sm font-bold text-white leading-snug mb-2">
                     {fortuneResult.overall.split(/[.!?。]/)[0]?.trim()}
                   </div>
                   {fortuneResult.quote && (
-                    <div
-                      className="text-[11px] leading-snug"
-                      style={{
-                        color: 'rgba(255,255,255,0.4)',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                      }}
-                    >
+                    <div className="text-[11px] leading-snug" style={{ color: 'rgba(255,255,255,0.4)' }}>
                       "{fortuneResult.quote}"
                     </div>
                   )}
