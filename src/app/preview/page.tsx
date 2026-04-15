@@ -489,6 +489,31 @@ export default async function PreviewPage({
           </div>
         )}
 
+        {/* ── 9. 전체 해석 포함 내용 리스트 ── */}
+        <GlassCard>
+          <SectionHeader>전체 해석에 포함된 내용</SectionHeader>
+          <ul className="space-y-2.5">
+            {[
+              { icon: '🔢', label: '수리 획수 완전 해석', desc: '원격·형격·이격·정격 풀이' },
+              { icon: '🌊', label: '10년 단위 대운 흐름 전체', desc: '지금 이후의 모든 사이클' },
+              { icon: '☯️', label: '이름 × 사주 조화 분석', desc: '이름이 사주를 보완하는 방식' },
+              { icon: '🪞', label: '성격 · 기질 분석', desc: '타고난 성향과 강점' },
+              { icon: '💰', label: '직업 · 재물 운', desc: '잘 맞는 직종과 재물 흐름' },
+              { icon: '✨', label: '이름 개운법', desc: '이름의 부족한 기운을 채우는 법' },
+            ].map(item => (
+              <li key={item.label} className="flex items-center gap-3">
+                <span className="text-base w-6 text-center shrink-0">{item.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm font-semibold text-[#2D2926]">{item.label}</span>
+                  <span className="text-xs text-[#9D9690] ml-2">{item.desc}</span>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
+                  style={{ background: 'rgba(217,93,57,0.1)', color: '#D95D39' }}>포함</span>
+              </li>
+            ))}
+          </ul>
+        </GlassCard>
+
       </div>
 
       {/* ── Sticky 하단 결제 CTA ── */}
