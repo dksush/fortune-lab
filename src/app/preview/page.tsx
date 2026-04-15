@@ -218,12 +218,6 @@ export default async function PreviewPage({
 
       <div className="relative z-10 max-w-[480px] mx-auto px-4 pt-6 pb-44 space-y-3">
 
-        {/* ── 1. 앱 헤더 ── */}
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-semibold text-[#2D2926]">이름 운세 분석</span>
-          {birth && <span className="text-xs text-[#6D6661]">{birth.split(' ')[0]}</span>}
-        </div>
-
         {/* ── 2. 다크 히어로 카드 ── */}
         <div
           className="rounded-3xl p-5 relative overflow-hidden"
