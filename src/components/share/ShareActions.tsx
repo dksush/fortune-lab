@@ -23,17 +23,19 @@ export function ShareActions({ uuid, inputName }: Props) {
 
   const handleKakao = () => {
     if (!window.Kakao?.isInitialized()) return
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://fortune-lab-rho.vercel.app'
+    const resultUrl = `${baseUrl}/result/${uuid}`
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
         title: `${inputName}의 이름 풀이`,
-        description: 'AI가 분석한 나의 이름 기운을 확인해보세요',
-        imageUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/og/${uuid}`,
-        link: { mobileWebUrl: url, webUrl: url },
+        description: '내 이름에 담긴 기운과 운명의 흐름을 확인해보세요',
+        imageUrl: `${baseUrl}/api/og/${uuid}`,
+        link: { mobileWebUrl: resultUrl, webUrl: resultUrl },
       },
       buttons: [
-        { title: '풀이 보기', link: { mobileWebUrl: url, webUrl: url } },
-        { title: '나도 받기', link: { mobileWebUrl: process.env.NEXT_PUBLIC_BASE_URL, webUrl: process.env.NEXT_PUBLIC_BASE_URL } },
+        { title: '풀이 보기', link: { mobileWebUrl: resultUrl, webUrl: resultUrl } },
+        { title: '나도 받기', link: { mobileWebUrl: baseUrl, webUrl: baseUrl } },
       ],
     })
   }
