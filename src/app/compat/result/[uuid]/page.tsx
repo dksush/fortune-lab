@@ -1,10 +1,28 @@
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import { createServiceClient } from '@/lib/supabase/server'
 import type { CompatFortuneResult } from '@/lib/compat-fortune'
 import Link from 'next/link'
+import { CompatShareActions } from '@/components/share/CompatShareActions'
 
 interface Props {
   params: Promise<{ uuid: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { uuid } = await params
+  const supabase = createServiceClient()
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid)
+  const { data } = await (isUuid
+    ? supabase.from('compat_fortunes').select('my_name, partner_name').eq('id', uuid).single()
+    : supabase.from('compat_fortunes').select('my_name, partner_name').eq('short_id', uuid).single())
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://fortune-lab-rho.vercel.app'
+  return {
+    title: data ? `${data.my_name} ♥ ${data.partner_name} 궁합 풀이` : '궁합 풀이',
+    openGraph: {
+      images: [`${baseUrl}/api/og/compat/${uuid}`],
+    },
+  }
 }
 
 function compatQuery(supabase: ReturnType<typeof createServiceClient>, id: string) {
@@ -192,6 +210,18 @@ export default async function CompatResultPage({ params }: Props) {
           <p className="text-base font-semibold text-[#2D2926] leading-relaxed italic">
             &ldquo;{result.quote}&rdquo;
           </p>
+        </div>
+
+        {/* ── 공유 ── */}
+        <div className="space-y-2 pt-2">
+          <p className="text-center text-[#6D6661] text-xs tracking-wide">
+            이 궁합을 상대방에게 공유해보세요
+          </p>
+          <CompatShareActions
+            uuid={uuid}
+            myName={data.my_name}
+            partnerName={data.partner_name}
+          />
         </div>
 
         {/* ── 하단 액션 ── */}
