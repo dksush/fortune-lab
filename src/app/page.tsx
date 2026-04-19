@@ -454,7 +454,7 @@ export default function HomePage() {
         <div style={{ fontSize: 10, color: '#9a8878', lineHeight: 1.8, textAlign: 'center' }}>
           <p>상호: 이름운세 · 대표자: 안현호</p>
           <p>사업자등록번호: 287-07-03490</p>
-          <p>통신판매업신고번호: 신청중</p>
+          <p>문의: fortun-lab@gmail.com</p>
           <p style={{ marginTop: 6, color: '#b0a090' }}>© 2026 이름운세. All rights reserved.</p>
         </div>
       </div>

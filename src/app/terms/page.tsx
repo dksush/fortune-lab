@@ -41,7 +41,7 @@ export default function TermsPage() {
         <p><strong>상호:</strong> 이름운세</p>
         <p><strong>대표자:</strong> 안현호</p>
         <p><strong>사업자등록번호:</strong> 287-07-03490</p>
-        <p><strong>통신판매업신고번호:</strong> 신청중</p>
+        <p><strong>문의:</strong> fortun-lab@gmail.com</p>
       </div>
 
       <div style={{ marginTop: 24, textAlign: 'center' }}>
