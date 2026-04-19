@@ -311,6 +311,10 @@ export default async function ResultPage({ params }: Props) {
 
   const currentYear = new Date().getFullYear()
 
+  // 궁합 CTA URL
+  const myHanjaForCompat = hanjaData.map((h, i) => ({ pos: h.pos ?? i, character: h.character, reading: h.reading, meaning: h.meaning }))
+  const compatUrl = `/compat?myName=${encodeURIComponent(fortune.input_name)}&myBirth=${encodeURIComponent(fortune.birth_date ?? '')}&myGender=${encodeURIComponent(fortune.gender ?? 'male')}&myHanja=${encodeURIComponent(Buffer.from(JSON.stringify(myHanjaForCompat)).toString('base64'))}`
+
   return (
     <main className="ethereal-gradient min-h-screen">
       {/* 배경 블러 장식 */}
@@ -794,6 +798,31 @@ export default async function ResultPage({ params }: Props) {
             이 풀이를 친구에게 공유해보세요
           </p>
           <ShareActions uuid={uuid} inputName={fortune.input_name} />
+        </div>
+
+        {/* ── 궁합 CTA ── */}
+        <div
+          className="rounded-2xl p-5 text-center"
+          style={{
+            background: 'linear-gradient(135deg, rgba(217,93,57,0.08), rgba(93,115,157,0.08))',
+            border: '1px solid rgba(217,93,57,0.2)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+          }}
+        >
+          <div className="text-2xl mb-2">♥</div>
+          <p className="text-base font-bold text-[#2D2926] mb-1">{fortune.input_name}님의 궁합도 확인해보세요</p>
+          <p className="text-xs text-[#6D6661] mb-4">이름 한자와 사주로 풀어보는 두 사람의 기운</p>
+          <Link
+            href={compatUrl}
+            className="block w-full py-4 rounded-xl text-white font-bold text-sm text-center transition-all active:scale-95"
+            style={{
+              background: 'linear-gradient(to right, #D95D39, #F28C6A)',
+              boxShadow: '0 8px 24px rgba(217,93,57,0.3)',
+            }}
+          >
+            ✦ {fortune.input_name}님의 궁합 풀이받기 · 1,490원
+          </Link>
         </div>
 
         <div
