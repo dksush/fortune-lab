@@ -6,6 +6,16 @@ import { createServiceClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 
+const CONNECTOR = (relationType?: string) => {
+  if (relationType === 'lover') return '♥'
+  if (relationType === 'family') return '∞'
+  return '✦'
+}
+
+const RELATION_LABEL: Record<string, string> = {
+  lover: '연인 궁합', friend: '친구 궁합', family: '가족 궁합',
+}
+
 const SCORE_COLOR = (score: number) => {
   if (score >= 85) return '#3D8C5F'
   if (score >= 70) return '#5D739D'
@@ -41,6 +51,8 @@ export async function GET(
   }
 
   const scoreColor = SCORE_COLOR(score)
+  const connector = CONNECTOR(data?.relation_type)
+  const relationLabel = RELATION_LABEL[data?.relation_type ?? 'lover'] ?? '궁합'
   const fontData = await readFile(join(process.cwd(), 'public/fonts/Pretendard-Bold.ttf'))
 
   return new ImageResponse(
@@ -74,12 +86,17 @@ export async function GET(
           ✦
         </div>
 
-        {/* 서비스명 */}
+        {/* 서비스명 + 관계유형 */}
         <div style={{
-          fontSize: '20px', color: '#C4956A', letterSpacing: '6px',
-          marginBottom: '32px', display: 'flex',
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          gap: '8px', marginBottom: '32px',
         }}>
-          이름 궁합 분석
+          <div style={{ fontSize: '18px', color: '#6a4a30', letterSpacing: '4px', display: 'flex' }}>
+            이름 궁합 분석
+          </div>
+          <div style={{ fontSize: '22px', color: '#C4956A', letterSpacing: '6px', fontWeight: 700, display: 'flex' }}>
+            {relationLabel}
+          </div>
         </div>
 
         {/* 두 이름 + 하트 */}
@@ -98,9 +115,9 @@ export async function GET(
           </div>
           <div style={{
             fontSize: '48px', color: '#D95D39',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
+            display: 'flex', alignItems: 'center',
           }}>
-            <span>♥</span>
+            {connector}
           </div>
           <div style={{
             fontSize: partnerName.length > 3 ? '64px' : '80px',

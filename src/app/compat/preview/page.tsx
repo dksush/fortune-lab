@@ -37,6 +37,12 @@ const RELATION_LABEL: Record<string, string> = {
   family: '가족',
 }
 
+function getConnector(relationType: string): string {
+  if (relationType === 'lover') return '♥'
+  if (relationType === 'family') return '∞'
+  return '✦'
+}
+
 function getElementBars(birth: string, gender: Gender, hanja: CompatHanja[]) {
   const nameOhaeng = hanja.map(h => getElementFromReading(h.reading))
   return { nameOhaeng }
@@ -127,10 +133,10 @@ export default async function CompatPreviewPage({
           />
         </div>
 
-        {/* ── 하트 연결 ── */}
+        {/* ── 관계 연결 기호 ── */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px" style={{ background: 'rgba(217,93,57,0.2)' }} />
-          <span className="text-lg" style={{ color: '#D95D39' }}>♥</span>
+          <span className="text-lg" style={{ color: '#D95D39' }}>{getConnector(relationType)}</span>
           <div className="flex-1 h-px" style={{ background: 'rgba(217,93,57,0.2)' }} />
         </div>
 

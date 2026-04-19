@@ -36,6 +36,12 @@ const RELATION_LABEL: Record<string, string> = {
   lover: '연인 · 썸', friend: '친구', family: '가족',
 }
 
+function getConnector(relationType: string): string {
+  if (relationType === 'lover') return '♥'
+  if (relationType === 'family') return '∞'
+  return '✦'
+}
+
 const SCORE_COLORS = [
   { min: 85, color: '#3D8C5F', label: '천생연분' },
   { min: 70, color: '#5D739D', label: '좋은 인연' },
@@ -117,12 +123,15 @@ export default async function CompatResultPage({ params }: Props) {
             </div>
 
             {/* 점수 원 */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-base" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                {getConnector(data.relation_type ?? 'lover')}
+              </span>
               <div className="w-16 h-16 rounded-full flex items-center justify-center"
                 style={{ background: 'rgba(255,255,255,0.08)', border: `2px solid ${scoreInfo.color}` }}>
                 <span className="text-2xl font-black" style={{ color: scoreInfo.color }}>{result.score}</span>
               </div>
-              <div className="text-[10px] mt-1 font-bold" style={{ color: scoreInfo.color }}>{result.score_label}</div>
+              <div className="text-[10px] font-bold" style={{ color: scoreInfo.color }}>{result.score_label}</div>
             </div>
 
             <div className="text-right">
@@ -221,6 +230,7 @@ export default async function CompatResultPage({ params }: Props) {
             uuid={uuid}
             myName={data.my_name}
             partnerName={data.partner_name}
+            relationType={data.relation_type ?? 'lover'}
           />
         </div>
 

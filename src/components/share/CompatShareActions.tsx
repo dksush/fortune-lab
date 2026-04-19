@@ -6,13 +6,21 @@ interface Props {
   uuid: string
   myName: string
   partnerName: string
+  relationType?: string
+}
+
+function getConnector(relationType?: string): string {
+  if (relationType === 'lover') return '♥'
+  if (relationType === 'family') return '∞'
+  return '✦'
 }
 
 declare global {
   interface Window { Kakao: any }
 }
 
-export function CompatShareActions({ uuid, myName, partnerName }: Props) {
+export function CompatShareActions({ uuid, myName, partnerName, relationType }: Props) {
+  const connector = getConnector(relationType)
   const [copied, setCopied] = useState(false)
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://fortune-lab-rho.vercel.app'
@@ -29,7 +37,7 @@ export function CompatShareActions({ uuid, myName, partnerName }: Props) {
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: `${myName} ♥ ${partnerName} 궁합 풀이`,
+        title: `${myName} ${connector} ${partnerName} 궁합 풀이`,
         description: '두 사람의 이름에 담긴 기운의 조화를 확인해보세요',
         imageUrl: `${baseUrl}/api/og/compat/${uuid}`,
         link: { mobileWebUrl: resultUrl, webUrl: resultUrl },

@@ -23,11 +23,18 @@ interface Props {
   relationType: string
 }
 
+function getConnector(relationType: string): string {
+  if (relationType === 'lover') return '♥'
+  if (relationType === 'family') return '∞'
+  return '✦'
+}
+
 export function PaymentButtonCompat({
   myName, myBirth, myGender, myHanja,
   partnerName, partnerBirth, partnerGender, partnerHanja,
   relationType,
 }: Props) {
+  const connector = getConnector(relationType)
   const [loading, setLoading] = useState(false)
 
   const handlePay = async () => {
@@ -57,7 +64,7 @@ export function PaymentButtonCompat({
         storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
         channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
         paymentId,
-        orderName: `${myName} ♥ ${partnerName} 궁합 풀이`,
+        orderName: `${myName} ${connector} ${partnerName} 궁합 풀이`,
         totalAmount: 1490,
         currency: 'CURRENCY_KRW',
         payMethod: 'CARD',
@@ -89,7 +96,7 @@ export function PaymentButtonCompat({
     >
       {loading
         ? '결제창 열기…'
-        : `✦ ${myName} ♥ ${partnerName} 궁합 풀이 · 1,490원 ✦`}
+        : `✦ ${myName} ${connector} ${partnerName} 궁합 풀이 · 1,490원 ✦`}
     </button>
   )
 }
