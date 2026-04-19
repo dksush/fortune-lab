@@ -128,9 +128,7 @@ function SuccessContent() {
   const inputName = params.get('inputName') ?? ''
 
   useEffect(() => {
-    const paymentKey = params.get('paymentKey')
-    const orderId = params.get('orderId')
-    const amount = params.get('amount')
+    const paymentId = params.get('paymentId')
     const hanjaIds = params.get('hanjaIds')?.split(',').filter(Boolean) ?? []
     const birthDate = params.get('birthDate') ?? ''
     const extraEncoded = params.get('extra') ?? ''
@@ -140,14 +138,13 @@ function SuccessContent() {
       if (extraEncoded) extraHanja = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(extraEncoded)))))
     } catch { /* ignore */ }
 
-    if (!paymentKey || !orderId || !amount) return
+    if (!paymentId) return
 
     fetch('/api/payment/confirm', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        paymentKey, orderId,
-        amount: Number(amount),
+        paymentId,
         inputName: inputName ?? '',
         hanjaIds,
         readingRaw: inputName ?? '',

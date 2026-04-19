@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { loadTossPayments } from '@tosspayments/tosspayments-sdk'
+import * as PortOne from '@portone/browser-sdk/v2'
 import { v4 as uuidv4 } from 'uuid'
 
 interface ExtraHanja {
@@ -26,34 +26,38 @@ export function PaymentButtonPreview({ inputName, hanjaIds, extraHanja, birthDat
     setLoading(true)
 
     try {
-      const toss = await loadTossPayments(process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!)
-      const orderId = `fortune_${uuidv4()}`
-      const payment = toss.payment({ customerKey: 'ANONYMOUS' })
-
+      const paymentId = `fortune_${uuidv4()}`
       const extraEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(extraHanja))))
-      const successUrl = [
+      const redirectUrl = [
         `${window.location.origin}/payment/success`,
-        `?inputName=${encodeURIComponent(inputName)}`,
+        `?paymentId=${encodeURIComponent(paymentId)}`,
+        `&inputName=${encodeURIComponent(inputName)}`,
         `&hanjaIds=${hanjaIds.join(',')}`,
         `&birthDate=${encodeURIComponent(birthDate)}`,
         `&extra=${encodeURIComponent(extraEncoded)}`,
         `&gender=${encodeURIComponent(gender)}`,
       ].join('')
 
-      await payment.requestPayment({
-        method: 'CARD',
-        amount: { currency: 'KRW', value: 990 },
-        orderId,
+      const response = await PortOne.requestPayment({
+        storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
+        channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
+        paymentId,
         orderName: `${inputName} 이름 풀이`,
-        successUrl,
-        failUrl: `${window.location.origin}/payment/fail`,
-        card: { useEscrow: false },
-      })
-    } catch (err: any) {
-      if (err.code !== 'USER_CANCEL') {
-        console.error('[Toss] error:', err)
-        alert(`결제 오류: ${err.message ?? err.code ?? JSON.stringify(err)}`)
+        totalAmount: 990,
+        currency: 'CURRENCY_KRW',
+        payMethod: 'CARD',
+        redirectUrl,
+      } as any)
+
+      // 리다이렉트 없이 응답이 바로 오는 경우 (팝업 방식)
+      if (response?.code) {
+        if (response.code !== 'FAILURE_TYPE_PG') {
+          console.error('[PortOne] error:', response)
+          alert(`결제 오류: ${response.message ?? response.code}`)
+        }
       }
+    } catch (err: any) {
+      console.error('[PortOne] error:', err)
     } finally {
       setLoading(false)
     }
