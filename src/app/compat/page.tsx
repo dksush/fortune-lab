@@ -238,6 +238,7 @@ function CompatPageInner() {
 
   return (
     <div style={{ background: '#1A0F07', minHeight: '100vh', fontFamily }}>
+      <div style={{ maxWidth: 390, margin: '0 auto', overflowX: 'hidden' }}>
 
       {/* 히어로 */}
       <div style={{ padding: '52px 24px 24px', textAlign: 'center' }}>
@@ -397,6 +398,8 @@ function CompatPageInner() {
           )}
         </div>
       </div>
+
+      </div> {/* maxWidth 390 wrapper */}
     </div>
   )
 }
