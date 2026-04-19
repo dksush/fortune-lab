@@ -31,9 +31,9 @@ const INITIAL_ROWS = (): NameRow[] => [
 ]
 
 const RELATION_OPTIONS = [
-  { value: 'lover', label: '연인 · 썸' },
-  { value: 'friend', label: '친구' },
-  { value: 'family', label: '가족' },
+  { value: 'lover', label: '연인 · 썸', icon: '💑' },
+  { value: 'friend', label: '친구',    icon: '🤝' },
+  { value: 'family', label: '가족',    icon: '🏠' },
 ]
 
 function CompatPageInner() {
@@ -51,7 +51,7 @@ function CompatPageInner() {
   })()
   const hasPrefill = !!prefillName
 
-  // Step: 1=내 정보, 2=상대방 정보
+  // Step: 1=내 정보, 2=상대방 정보+관계유형
   const [step, setStep] = useState<1 | 2>(hasPrefill ? 2 : 1)
   const [relationType, setRelationType] = useState<'lover' | 'friend' | 'family'>('lover')
 
@@ -59,6 +59,7 @@ function CompatPageInner() {
   const myRowCounter = useRef(3)
   const [myRows, setMyRows] = useState<NameRow[]>(INITIAL_ROWS())
   const [myGender, setMyGender] = useState<'male' | 'female'>(prefillGender)
+  const [myCalendar, setMyCalendar] = useState<'solar' | 'lunar'>('solar')
   const [myBirthYear, setMyBirthYear] = useState('')
   const [myBirthMonth, setMyBirthMonth] = useState('')
   const [myBirthDay, setMyBirthDay] = useState('')
@@ -72,6 +73,7 @@ function CompatPageInner() {
   const partnerRowCounter = useRef(3)
   const [partnerRows, setPartnerRows] = useState<NameRow[]>(INITIAL_ROWS())
   const [partnerGender, setPartnerGender] = useState<'male' | 'female'>('female')
+  const [partnerCalendar, setPartnerCalendar] = useState<'solar' | 'lunar'>('solar')
   const [partnerBirthYear, setPartnerBirthYear] = useState('')
   const [partnerBirthMonth, setPartnerBirthMonth] = useState('')
   const [partnerBirthDay, setPartnerBirthDay] = useState('')
@@ -119,22 +121,16 @@ function CompatPageInner() {
     const myN = hasPrefill ? prefillName : myInputName
     const myB = hasPrefill ? prefillBirth : myBirthForApi
     const myG = hasPrefill ? prefillGender : myGender
-    const myIds = hasPrefill ? [] : myHanjaIds
-    const myExtra = hasPrefill ? [] : myExtraHanja
 
     const params = new URLSearchParams({
       myName: myN,
       myBirth: myB,
       myGender: myG,
       myHanja: btoa(unescape(encodeURIComponent(JSON.stringify(myH)))),
-      myIds: myIds.join(','),
-      myExtra: btoa(unescape(encodeURIComponent(JSON.stringify(myExtra)))),
       partnerName: partnerInputName,
       partnerBirth: partnerBirthForApi,
       partnerGender,
       partnerHanja: btoa(unescape(encodeURIComponent(JSON.stringify(partnerAllHanja)))),
-      partnerIds: partnerHanjaIds.join(','),
-      partnerExtra: btoa(unescape(encodeURIComponent(JSON.stringify(partnerExtraHanja)))),
       relationType,
     })
     router.push(`/compat/preview?${params.toString()}`)
@@ -147,6 +143,34 @@ function CompatPageInner() {
     cursor: 'pointer', textAlign: 'left' as const, fontFamily,
     transition: 'border-color 0.15s', boxSizing: 'border-box' as const,
   }
+
+  const renderCalendarGenderRow = (
+    calendar: 'solar' | 'lunar', setCalendar: (v: 'solar' | 'lunar') => void,
+    gender: 'male' | 'female', setGender: (v: 'male' | 'female') => void,
+  ) => (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+      <div>
+        <p style={{ fontSize: 12, color: '#8a7060', marginBottom: 6 }}>달력</p>
+        <div style={{ display: 'flex', background: '#e8ddd4', borderRadius: 12, padding: 3, gap: 3 }}>
+          {(['solar', 'lunar'] as const).map(t => (
+            <button key={t} onClick={() => setCalendar(t)} style={{ flex: 1, textAlign: 'center', padding: '10px 0', borderRadius: 10, fontSize: 14, cursor: 'pointer', fontWeight: calendar === t ? 700 : 500, background: calendar === t ? '#5a72a8' : 'transparent', color: calendar === t ? '#fff' : '#8a7060', border: 'none', fontFamily, transition: 'all 0.15s' }}>
+              {t === 'solar' ? '양력' : '음력'}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p style={{ fontSize: 12, color: '#8a7060', marginBottom: 6 }}>성별</p>
+        <div style={{ display: 'flex', background: '#e8ddd4', borderRadius: 12, padding: 3, gap: 3 }}>
+          {(['male', 'female'] as const).map(g => (
+            <button key={g} onClick={() => setGender(g)} style={{ flex: 1, textAlign: 'center', padding: '10px 0', borderRadius: 10, fontSize: 14, cursor: 'pointer', fontWeight: gender === g ? 700 : 500, background: gender === g ? '#E07A3A' : 'transparent', color: gender === g ? '#fff' : '#8a7060', border: 'none', fontFamily, transition: 'all 0.15s' }}>
+              {g === 'male' ? '남성' : '여성'}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 
   const renderDatePicker = (
     open: boolean, setOpen: (v: boolean) => void, ref: React.RefObject<HTMLDivElement>,
@@ -212,16 +236,6 @@ function CompatPageInner() {
     </div>
   )
 
-  const renderGenderToggle = (value: 'male' | 'female', onChange: (v: 'male' | 'female') => void) => (
-    <div style={{ display: 'flex', background: '#F5F0EB', borderRadius: 12, padding: 4, gap: 4 }}>
-      {(['male', 'female'] as const).map(g => (
-        <button key={g} onClick={() => onChange(g)} style={{ flex: 1, padding: '10px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontFamily, fontSize: 14, fontWeight: 700, transition: 'all 0.15s', background: value === g ? '#fff' : 'transparent', color: value === g ? '#2A1A0E' : '#8a7060', boxShadow: value === g ? '0 1px 4px rgba(0,0,0,0.08)' : 'none' }}>
-          {g === 'male' ? '남성' : '여성'}
-        </button>
-      ))}
-    </div>
-  )
-
   return (
     <div style={{ background: '#1A0F07', minHeight: '100vh', fontFamily }}>
 
@@ -239,26 +253,18 @@ function CompatPageInner() {
         </p>
       </div>
 
-      {/* 관계 유형 선택 */}
-      <div style={{ padding: '0 18px 16px' }}>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-          {RELATION_OPTIONS.map(opt => (
-            <button key={opt.value} onClick={() => setRelationType(opt.value as any)} style={{ flex: 1, padding: '10px 0', borderRadius: 24, border: 'none', cursor: 'pointer', fontFamily, fontSize: 13, fontWeight: 700, transition: 'all 0.15s', background: relationType === opt.value ? '#E07A3A' : 'rgba(255,255,255,0.08)', color: relationType === opt.value ? '#fff' : '#8a7060' }}>
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* 폼 바텀시트 */}
       <div style={{ background: '#F5F0EB', borderRadius: '28px 28px 0 0', padding: '28px 18px 140px', minHeight: '60vh' }}>
+
+        {/* Handle */}
+        <div style={{ width: 36, height: 4, background: '#d4c8bc', borderRadius: 2, margin: '0 auto 22px' }} />
 
         {/* Step 인디케이터 */}
         {!hasPrefill && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24, justifyContent: 'center' }}>
             {[1, 2].map(s => (
               <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, background: step === s ? '#E07A3A' : step > s ? '#E07A3A' : '#e8ddd4', color: step >= s ? '#fff' : '#8a7060', transition: 'all 0.2s' }}>
+                <div style={{ width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, background: step >= s ? '#E07A3A' : '#e8ddd4', color: step >= s ? '#fff' : '#8a7060', transition: 'all 0.2s' }}>
                   {step > s ? '✓' : s}
                 </div>
                 <span style={{ fontSize: 12, color: step === s ? '#E07A3A' : '#8a7060', fontWeight: step === s ? 700 : 400 }}>
@@ -273,53 +279,90 @@ function CompatPageInner() {
         {/* ── Step 1: 내 정보 ── */}
         {!hasPrefill && step === 1 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#2A1A0E', marginBottom: 4 }}>나의 정보</div>
-
-            {renderGenderToggle(myGender, setMyGender)}
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#E07A3A', marginBottom: -4 }}>성명 입력</p>
 
             <div style={{ background: '#fff', borderRadius: 14, padding: '14px 12px' }}>
               <p style={{ fontSize: 11, color: '#8a7060', marginBottom: 10 }}>이름 한자</p>
-              <HanjaSelector rows={myRows} onUpdate={(id, patch) => setMyRows(prev => prev.map(r => r.id === id ? { ...r, ...patch } : r))} onAddRow={() => { if (myRows.length >= 5) return; const id = `my${++myRowCounter.current}`; setMyRows(prev => [...prev, { id, query: '', syllable: '', selected: null }]) }} onRemoveRow={id => setMyRows(prev => prev.filter(r => r.id !== id))} labels={ROW_LABELS} />
+              <HanjaSelector
+                rows={myRows}
+                onUpdate={(id, patch) => setMyRows(prev => prev.map(r => r.id === id ? { ...r, ...patch } : r))}
+                onAddRow={() => { if (myRows.length >= 5) return; const id = `my${++myRowCounter.current}`; setMyRows(prev => [...prev, { id, query: '', syllable: '', selected: null }]) }}
+                onRemoveRow={id => setMyRows(prev => prev.filter(r => r.id !== id))}
+                labels={ROW_LABELS}
+              />
             </div>
 
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#E07A3A', marginBottom: -4 }}>달력 &amp; 성별</p>
+            {renderCalendarGenderRow(myCalendar, setMyCalendar, myGender, setMyGender)}
+
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#E07A3A', marginBottom: -4 }}>생년월일 &amp; 시간</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               {renderDatePicker(myBirthDateOpen, setMyBirthDateOpen, myBirthRef as any, myBirthYear, setMyBirthYear, myBirthMonth, setMyBirthMonth, myBirthDay, setMyBirthDay, myBirthDisplay)}
               {renderTimePicker(myTimeOpen, setMyTimeOpen, myTimeRef as any, mySijinIdx, setMySijinIdx, myTimeDisplay)}
             </div>
-
             <p style={{ fontSize: 11, color: '#8a7060', marginTop: -8 }}>양력 기준. 시간 입력 시 시주까지 계산됩니다.</p>
 
-            <a href="/" style={{ fontSize: 12, color: '#8a7060', textAlign: 'center', display: 'block', marginTop: 4 }}>
+            <a href="/" style={{ fontSize: 12, color: '#8a7060', textAlign: 'center', display: 'block', marginTop: 4, textDecoration: 'none' }}>
               내 이름만 풀이받기 →
             </a>
           </div>
         )}
 
-        {/* ── Step 2: 상대방 정보 (또는 pre-fill일 때 바로 표시) ── */}
+        {/* ── Step 2: 상대방 정보 + 관계 유형 ── */}
         {(step === 2 || hasPrefill) && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* pre-fill 배너 */}
             {hasPrefill && (
-              <div style={{ background: 'rgba(224,122,58,0.08)', borderRadius: 12, padding: '12px 14px', marginBottom: 4 }}>
-                <p style={{ fontSize: 11, color: '#E07A3A', fontWeight: 700, marginBottom: 2 }}>내 정보 (이미 입력됨)</p>
+              <div style={{ background: 'rgba(224,122,58,0.08)', borderRadius: 12, padding: '12px 14px' }}>
+                <p style={{ fontSize: 11, color: '#E07A3A', fontWeight: 700, marginBottom: 2 }}>내 정보 (자동 입력됨)</p>
                 <p style={{ fontSize: 13, color: '#2A1A0E', fontWeight: 600 }}>{prefillName} · {prefillBirth?.split(' ')[0]}</p>
               </div>
             )}
 
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#2A1A0E', marginBottom: 4 }}>상대방 정보</div>
-
-            {renderGenderToggle(partnerGender, setPartnerGender)}
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#E07A3A', marginBottom: -4 }}>상대방 성명 입력</p>
 
             <div style={{ background: '#fff', borderRadius: 14, padding: '14px 12px' }}>
               <p style={{ fontSize: 11, color: '#8a7060', marginBottom: 10 }}>이름 한자</p>
-              <HanjaSelector rows={partnerRows} onUpdate={(id, patch) => setPartnerRows(prev => prev.map(r => r.id === id ? { ...r, ...patch } : r))} onAddRow={() => { if (partnerRows.length >= 5) return; const id = `pt${++partnerRowCounter.current}`; setPartnerRows(prev => [...prev, { id, query: '', syllable: '', selected: null }]) }} onRemoveRow={id => setPartnerRows(prev => prev.filter(r => r.id !== id))} labels={ROW_LABELS} />
+              <HanjaSelector
+                rows={partnerRows}
+                onUpdate={(id, patch) => setPartnerRows(prev => prev.map(r => r.id === id ? { ...r, ...patch } : r))}
+                onAddRow={() => { if (partnerRows.length >= 5) return; const id = `pt${++partnerRowCounter.current}`; setPartnerRows(prev => [...prev, { id, query: '', syllable: '', selected: null }]) }}
+                onRemoveRow={id => setPartnerRows(prev => prev.filter(r => r.id !== id))}
+                labels={ROW_LABELS}
+              />
             </div>
 
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#E07A3A', marginBottom: -4 }}>달력 &amp; 성별</p>
+            {renderCalendarGenderRow(partnerCalendar, setPartnerCalendar, partnerGender, setPartnerGender)}
+
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#E07A3A', marginBottom: -4 }}>생년월일 &amp; 시간</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               {renderDatePicker(partnerBirthDateOpen, setPartnerBirthDateOpen, partnerBirthRef as any, partnerBirthYear, setPartnerBirthYear, partnerBirthMonth, setPartnerBirthMonth, partnerBirthDay, setPartnerBirthDay, partnerBirthDisplay)}
               {renderTimePicker(partnerTimeOpen, setPartnerTimeOpen, partnerTimeRef as any, partnerSijinIdx, setPartnerSijinIdx, partnerTimeDisplay)}
             </div>
-
             <p style={{ fontSize: 11, color: '#8a7060', marginTop: -8 }}>양력 기준. 시간 입력 시 시주까지 계산됩니다.</p>
+
+            {/* 관계 유형 — 폼 안쪽 마지막 */}
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#E07A3A', marginBottom: -4 }}>관계 유형</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+              {RELATION_OPTIONS.map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => setRelationType(opt.value as any)}
+                  style={{
+                    padding: '12px 0', borderRadius: 12, border: relationType === opt.value ? '2px solid #E07A3A' : '2px solid #e8ddd4',
+                    cursor: 'pointer', fontFamily, background: relationType === opt.value ? 'rgba(224,122,58,0.08)' : '#fff',
+                    transition: 'all 0.15s', textAlign: 'center',
+                  }}
+                >
+                  <div style={{ fontSize: 20, marginBottom: 4 }}>{opt.icon}</div>
+                  <div style={{ fontSize: 12, fontWeight: relationType === opt.value ? 700 : 500, color: relationType === opt.value ? '#E07A3A' : '#8a7060' }}>
+                    {opt.label}
+                  </div>
+                </button>
+              ))}
+            </div>
 
             {!hasPrefill && (
               <button onClick={() => setStep(1)} style={{ fontSize: 12, color: '#8a7060', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'center', fontFamily }}>
@@ -332,7 +375,7 @@ function CompatPageInner() {
 
       {/* Fixed CTA */}
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#F5F0EB', padding: '12px 18px 24px', zIndex: 50 }}>
-        <div style={{ maxWidth: 390, margin: '0 auto' }}>
+        <div style={{ maxWidth: 480, margin: '0 auto' }}>
           {!hasPrefill && step === 1 ? (
             <button
               onClick={() => setStep(2)}
