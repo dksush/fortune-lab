@@ -73,7 +73,7 @@ export function PaymentButtonPreview({ inputName, hanjaIds, extraHanja, birthDat
         boxShadow: '0 12px 40px rgba(217,93,57,0.45)',
       }}
     >
-      {loading ? '결제창 열기…' : `✦ ${inputName}님의 전체 운세 확인하기 ✦`}
+      {loading ? '결제창 열기…' : `✦ ${inputName}님의 전체 운세 확인하기 · 990원 ✦`}
     </button>
   )
 }
